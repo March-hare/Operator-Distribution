@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment=
+Comment[en_US]=
+Encoding=UTF-8
+Exec[$e]='/usr/bin/zoiper'
+GenericName=IAX & SIP Softphone
+GenericName[en_US]=IAX & SIP Softphone
+Icon=/usr/share/icons/locolor/32x32/apps/Zoiper.png
+MimeType=
+Name=ZoIPer
+Name[en_US]=ZoIPer
+Path[$e]=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DCOP-ServiceType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
