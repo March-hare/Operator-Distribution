@@ -1,0 +1,839 @@
+6.1.2
+
+- upgraded Slax kernel to 2.6.27.27, which contains many bugfixes
+- added xz package (LZMA compressor/decompressor)
+- added support for txz Slackware packages
+- upgraded midnight commander to understand txz packages
+- fixed incorrect reporting of module file path in Slax Module Manager
+  (if size of module was smaller than 1MB, it didn't show module file at all)
+- fixed incorrect slaxsave.dat (the 1GB one), thanks to forum user att
+- added 2GB slaxsave.dat file to the zip archive
+- added FireFox 3.5.1, as a separated module 007-firefox.lzm
+  This version integrates itself into KDE
+- added Slax Drive support, see www.slax.org/slax-tools.php for more info
+
+
+
+6.1.1
+
+- fixed handling of SATA devices by compiling IDE_GENERIC driver as a module
+  instead putting it inside the kernel directly
+- added support for some ATHEROS and IWLWIFI devices
+- ocfs is now compiled as a kernel module since I was told it's better that way
+- upgraded Flash Player plugin to version 9.0.159
+
+
+6.1.0
+
+- no more new features will be added to Slax 6.x, only bugfixes
+- added fake XDM to 002-xorg, so it will start fluxbox if KDE is not present
+- upgraded to Slackware-current as of the last changes before KDE4 were in
+- added new wallpaper
+- fixed a lot of fluxbox-related bugs, now even fluxbox can select accurate
+  (preferred) screen resolution and play a startup sound
+
+
+6.0.9
+
+- upgraded to Slackware-12.2
+- upgraded to Linux Kernel 2.6.27.8
+- upgraded samba-stripped, added libcap
+- fixed a bug in unsquashfs (lzm2dir) which happened on SMP machines
+- removed bluez* packagess
+
+
+6.0.8
+
+- upgraded to Linux Kernel 2.6.27.6
+- upgraded to KDE 3.5.10
+- upgraded to Slackware-current
+- upgraded to squashfs 3.4 including the tools (Thanks to Petr Vokac!)
+- added support to start Slax as a PXE server (in the boot menu)
+- loadlin didn't work anymore due to big filesize of vmlinuz and initrd.
+  It has been replaced by linLd, which allows us to boot Slax from DOS again
+- autodetect and automount LVM partitions. Suppress by 'noauto' boot parameter
+- cleanum /union/mnt/ directory (delete all empty directories every boot)
+- if 'ip=' boot parameter is present, initialize network drivers, request
+  the IP address from DHCP server and mount live data over HTTP from the server
+  provided as a second argument to the ip= boot param (separated by semicolon)
+  Usually, the ip= parameter is auto-added by pxelinux, and it looks like:
+  ip=<client-ip>:<boot-server-ip>:<gw-ip>:<netmask>
+- udev-fstab-update: added mutex lock to make sure only one instance
+  of the script runs at the same time (udev starts them in parallel).
+  A forum user 'specialist' thinks that parallel execution may break fstab
+- Archives for static linking (*.a) moved to devel module
+- implemented a posixovl workaround, which executes 'find' on the directory
+  with changes. This may slow down the boot a bit, but it seems to be enough
+  in order to make sure the posixovl filesystem behaves correctly all the time.
+  It initiates correct caches and doesn't make aufs confused anymore.
+
+
+6.0.7
+
+- Slax and all its parts are now Upgraded to Slackware 12.1
+- some enhancements to activate script to autostart correct startup scripts
+- better GTK integration - using KDE icons is prefered
+- when a module is already activated and activate is called again, show Yes/No dialog allowing to deactivate
+
+
+
+6.0.6
+
+- updated Flash Player to the latest version
+- recompiled KDE to fix some older FLAC dependencies
+- added libidl
+
+
+6.0.5
+
+- fixed alsa mixer settings when booting Slax on several different computers
+  with changes enabled
+- some slik:// fixes. Two things were needed - httpfs was modified to stop
+  refusing O_RWRO in the open() call, and also losetup is now monitored 
+  in linux live scripts and if error is returned, losetup -r is tried
+  afterwards. Note, losetup -r is available in Slackware since util-linux-ng
+  were added.
+- upgraded to Slackware current again, which fixes some bugs in glibc.
+- reordered the installed Slackware packages to prevent some gtk+2 problems
+
+
+6.0.4
+
+- stripped the 'samba-stripped' package even more, while adding smbspool
+  and upgrading to the newest version, this should enable printing on
+  shared Windows printers
+- recompiled kernel against new gcc
+- several packages moved from 003-desktop to 002-xorg:
+  rdesktop, librsvg, libgsf, xaw3d, lm_sensors, fluxbox
+- kommander (kmdr-executor) moved from 004-kdeapps to 003-desktop
+- nopcmcia boot parameter fixes again (for the third time!)
+- updated to Slackware-current
+- sound volumes are now adjusted like in alsaconfig
+- Slax now uses original alsa packages from Slackware
+
+
+6.0.3
+
+- fixed nopcmcia again, sorry for that
+- added /etc/hardwareclock (set to localtime)
+- removed gnutls package, I have no idea why this was even included
+- added wpa_supplicant
+- recompiled KDE components
+- upgraded to Slackware-current
+- fixed a bug in sqlzma, which may cause (in rare conditions) data corruption
+- bugfix: sgnfile= boot parameter was not working
+- bugfix: sqlzma kernel driver suffered a problem which is fixed now
+- make_iso.sh now works even if called from a different directory
+
+
+6.0.2
+
+- make activate and deactivate work even without k{activate/deactivate}
+- Slackware's gtk+2 update fixes the buggy flash in konqueror. So the plugin
+  is now enabled by default again.
+- microphone audio channels are not unmuted by default, this bug has been
+  introduced in 6.0.1, sorry for that
+- module manager and network-config chmoded to be executable, introduced in
+  6.0.1 as well, caused KDE to show annoying dialog.
+- hopefully fixed the nopcmcia boot parameter
+
+
+
+6.0.1
+
+- bugfix: Module Manager will display correct info about slik'ed modules
+- bugfix: activate refused to insert a module which was activater last time (before reboot)
+          because of some empty mountpoints left. This is now fixed
+- bugfix: /etc/slax-version now shows correct version number
+- bugfix: trash bin was not empty
+- bugfix: swap partitions were not auto activated due to a bug in linux live scripts
+- bugfix: raise sound volume for 'front', 'center' and 'side' channels too
+- kdeglobals set to force konqueror to follow slik:// addresses without asking
+- For a popular demand for at least a stripped version of vi in Slax, symlinked vi from busybox.
+  Slax will not have vi as default, but the 'vi' command will call the busybox's vi.
+- workaround: because Flash plugin with konqueror hangs even after recompiling KDE 3.5.9,
+  disabled flash plugins in konqueror. I have no idea how to fix that.
+- added madwifi drivers version 0.9.4
+- added memtest 2.1
+- make posixovl less sceptic (use kernel cache and set relookup timeouts to 300 seconds)
+  in order to get 2x better performace
+- delete some unneeded gcc++ files to save few megabytes
+
+
+6.0.0
+
+- added new Linux Live scripts with aufs instead of unionfs
+- aufs provides 100% stability and reliability. If you ever saw a kernel oops
+  in Slax, this should never happen anymore thanks to unionfs replacement: aufs
+- squashfs now supports LZMA compression, so Slax is a lot of smaller!
+- using udev instead of hotplug to autodetect and autoload device drivers
+- upgraded to newest Slackware's packages, newest Xorg, newest Kernel 2.6.24.2, newest KDE 3.5.8
+- most changelog entries are missing
+
+
+5.1.8.1
+
+- fixed samba ioslave for kde
+
+
+5.1.8
+
+- added KDE 3.5.4
+- probeusb parameter now sleeps 6 seconds to wait for USB devices
+- probeusb accepts value in seconds, like probeusb=10 (wait 10 seconds)
+- added changes=slaxsave.dat boot option so slax automatically saves changes
+  to a file called slaxsave.dat, if it exists in any partition's root
+  You may overide this default by your own changes=...
+- added slaxsave.zip to SLAX CD. This archive contains pre-builded
+  loop filesystems (size 128MB, 256MB, 512MB and 1GB). Just unpack your
+  desired file to the root of some partition and SLAX will save changes to it.
+  (doesn't work on NTFS as SLAX mounts NTFS readonly yet)
+- added NTFS-3g beta, mount your NTFS partitions with 100% writable support!
+- dhcpcd now waits 10 seconds for IP. People reported 5 seconds is not enough.
+- KDE icons in taskbar: removed ICQ icon (kopete) and added k3b icon
+- fixed problem with some missing partitions (usually swaps) in fstab
+- popcorn edition - use 1024x768 as default screen resolution
+
+
+5.1.7
+
+- fixed fluxbox startup script
+- added helvetica R10 font to stop FireFox crashing when rightclick on Flash
+- modified LC_ALL=C (moved to profile.d/lang.sh)
+- guest user removed at all, including /home/guest directory
+- fixed halt (poweroff) procedure
+- killbill edition: updated WINE, dosbox and qemu
+
+
+5.1.7rc2
+
+- /etc/shadow - fixed file permissions
+- the 'fromiso=' cheatcode is now renamed to 'from=' because it accepts also
+  full device path or directory path (from=/dev/hda1/slax/)
+- rc.local is now called as the last startup script.
+- added bold and italic DejaVu fonts
+- upgraded to fluxbox 1.0rc1, fluxbox theme modified to use DejaVu fonts
+- added mplayer 1.0pre8 with new xVid codecs, settings changed to use DejaVu fonts
+- added default subtitle encoding for mplayer (cp1250), change it in /root/.mplayer/config
+- added a feature to manage modules by using context menu (thanks to Matiee)
+- added back kernel 2.6.16(.22)
+- added noswap boot parameter to disable autoloading of a swap parition
+- fixed from=/dev/... paths
+- fixed comma and semicolon replacement in load= and noload= params
+- fixed linuxrc searching for data (dirname), thanks to Niels Endres
+- load= and noload= are now case-insensitive, thanks to Niels Endres
+- added -f option to syslinux in make_disk.bat, which allows user to install
+  SLAX to any disk, even if it's not removable
+- fixed starting Xwindow with copy2ram cheatcode
+- added 'cleanup' script call to properly unmount all devices used while 
+  'changes=' and 'from='.
+
+
+5.1.7rc1
+
+- added fromiso= boot argument. You may use fromiso=slax.iso to search through
+  the whole disk, or fromiso=/dev/sda1/slax.iso to search only on hda1
+- added noauto boot argument, to disable automounting of disks
+- SLAX doesn't start if you copy it to harddisk to a subdirectory. Use fromiso=
+  in the case you wish to boot slax from disk this way (fromiso=/dev/sda1/SLAX/)
+- modified changes= cheatcode to accept device names with path,
+  for example changes=/dev/sda1/changes.dat
+- fixed load= parameter which were broken in 5.4.5
+- modules are now found in /base /modules and /optional directories
+  and all its subdirectories!
+- load= and noload= now officially work as regexp, you may use * which
+  is translated to '.*'. Moreover if you have subdirectories of modules,
+  you may load or noload all the trees by a single argument
+
+
+
+5.1.6
+
+- added newest linux live scripts to fix some noload issues
+- added NTFS write support (use ntfsmount command and read NTFS wiki)
+- fuse module is modprobed automatically during boot (added to rc.modules)
+- setup konqueror to pipe sound through arts for plugins
+
+
+5.1.5
+
+- added noload cheatcode, to disable loading specified slax modules (even those from /base/ and /modules)
+- added ramsize= cheatcode, to specify how much RAM is used to store changes (defaults to ramsize=60%)
+- added make_disk.sh script to SLAX CD, to create bootable SLAX disk (eg. install SLAX to USB device)
+- added different size of boot (splash) image to be more compatible with all screen resolutions
+  Please note that SLAX doesn't need bootsplash patches in order to show image during boot,
+  all we need is different /usr/src/linux/drivers/video/logo/logo_linux_clut224.ppm
+- don't start dhcpcd at background (prevent annoying messages at login prompt)
+- unmute VIDEO and CD sound chanels (set volume to 77%)
+- set kPlayer to use arts
+- fixed popcorn missing libraries
+
+
+5.1.4
+
+- added KDE 3.5.2, koffice 1.5.0
+- updated alsa sound drivers
+- updated to latest Linux-2.6.16 patches
+- updated ndiswrapper and atheros wifi drivers
+- fixed gtk2 config to use nicer default theme and font (all firefox users are happy)
+- fixed manual IP configuration
+- dhcpcd now waits only 5 seconds to DHCP response
+- removed noatun at all
+- upgraded many libraries from Slackware current
+- added new busybox binary to linux live scripts, this fixes accidental
+  problems of mounting union during startup.
+- created official development module and kernel source module for SLAX
+- added iocharset= boot option, to mount NTFS/DOS filesystems with correct encoding
+- added script make_disk.bat to SLAX CD, to create USB bootable disk in windows
+- properly remount ro disk device if SLAX is using data from it
+- added FUSE and SSHFS filesystems, this will replace webconfig in the future
+- cups set as a default printing system in KDE
+- artsd doesn't autosuspend now, as this caused hundred of artsd processes 
+  to be started on some machines (and in vmware), causing SLAX to swap or hang
+- autoexec boot argument replaces "~" by spaces now, very useful if you need
+  to execute some command with parameters
+- when autoexec is used, halt (powerdown) instead of reboot
+- added openldap client and upgraded samba client files
+- removed 2 useless videos from k3b extras
+
+
+5.1.0
+
+- properly unmount device mounted by changes= boot argument
+- added kbuildsycoca to kde-uselivemod to rebuild menu entries
+- webconfig configuration size limit raised from 8MB to 28MB
+  webconfig now saves ALL modifications in the whole filesystem
+- webconfig now uses direct access (uselivemod and dir2mo),
+  configsave and configrestore are deprecated and will be replaced by
+  changes= cheatcode soon.
+- added DejaVu fonts (Bitstream Vera with enhancements)
+
+
+5.0.8
+
+- eject only CD which is SLAX running from (thanks to Grobsch for this idea)
+  This also causes no CD ejection if SLAX is started from harddisk
+
+
+
+5.0.7
+
+- based on Slackware 10.2
+- added Slackwares 2.6 testing kernel with SCSI support!
+- added ACPI modules directly to linux kernel (power button support)
+- added knemo to KDE (kde network monitor systray icon)
+- added portmap for NFS networks
+- added autoexec= boot option to allow execution of something instead of login. 
+  use eg. autoexec=startx (instead of former "gui" boot argument)
+- added nosound boot option
+- added newer memtest to linux live scripts and slax
+- add libvorbis and libogg to popcorn edition. required by many games
+- fixed rc.S, it now tries to remount read-only root filesystem to rw
+- fixed floppy boot parameter (rc.slax)
+- fixed uselivemod startup scripts (replaced SETUP## by SCRIPT##)
+- fixed bug in crashing kicker on kde logout
+- fixed the situatuin when mounting loop device confused mntall
+- fixed mntall to properly add comment for swap devices
+- fixed fstab-create to preserve lines added manually (which doesn't
+  have special #comment)
+- reverted to old ATI drivers in xorg. newer ones are broken
+- flash plugin didn't work for regular user because of wrong permissions
+- updated rc.* scripts in slax because of changes in Slackware
+- updated hotplug blacklist because of changes in Slackware
+- modified copy2ram function to copy only used .mo files to RAM
+- all .a files are now stripped with -g option (removing all unneeded debug)
+- removed gui boot option, you can always do autoexec=startx
+- ppp package moved to core.mo (so ppp is now included even in Frodo Edition)
+- rp-pppoe package moved to core.mo (so pppoe is now included even in Frodo Edition)
+- kbd package moved to core.mo (so it's in Frodo too)
+
+
+5.0.6
+
+- better integration of SLAX modules (.mo) in KDE
+- moved syncing in slax installer (to the end)
+- mntall script now also mounts (not only detects) all partitions when it's started,
+  nevertheless then it still doesn't mount any new (eg. usb) devices automatically
+  when they are plugged while running slax (only detects them and updates fstab)
+- using Linux Kernel 2.6.12.2 with new ALSA sound drivers 1.0.9b
+- KOffice+Pim are now in a separated base module, so it's easily removable
+- kdeApps are in separated module also
+- added new GTK default theme so GTK applications won't look ugly anymore.
+  This is needed because a lot of modules will be for GTK, I'm sure
+- fixed configsave and websafe, it didn't work properly for two or more sessions
+- removed nforce support for sound/net, I'm sorry but the driver won't compile
+- removed ThunderBird from Popcorn Edition
+- changed Kopete default font - it's smaller now
+- run ldconfig if /modules/ are used.
+- updated devel module, kernel source need make version.h etc...
+- added SLAX installer to KDE menu. The same for Netconf
+- compilled koffice 1.4 with wordperfect support
+- configsave now refuses to work under guest account
+- changed font settings for konqueror to use Luxi: Sans,Serif,Mono
+- removed 75dpi & Type1 fonts (saves 20MB!)
+- updated slax network configurator to offer implicit values which are currently set.
+- hopefully better function to create fstab
+- mntall script now uses blkid
+- start lisa with kde to allow LAN browsing, it needed some config file
+
+
+5.0.5 Popcorn Edition
+
+- upgraded to unionfs 1.0.12a + patches from current CVS
+- added XFce
+- added GTK apps for XFce: mozilla firefox and thunderbird, gaim, abiword, xmms, gmplayer
+- removed some *.pod documentation from perl, saves 2 MB
+
+
+5.0.5
+
+- recompiled kernel, using 2.6.11.8 with 4GB RAM support and SMP
+- fixed error message during X startup (about hostname)
+- guest user can see mixer icon and screensize icon too
+- added kio_imap for kmail
+- LISA is started with KDE to allow LAN browsing
+- startx didn't start KDE after flux command, fixed
+- updated fluxbox menu
+- created nice fluxbox plastik theme
+- added fstab-create script to make sure all devices are listed in fstab
+
+
+5.0.4
+
+- SLAX updated to Slackware current
+- fixed Kopete, it doesn't crash anymore.
+- recompiled KDE, added cyrus-sasl support
+- fixed slax installer, added remount,sync option
+- added MPlayer 1.0pre7
+- firewall is not started automatically anymore
+
+
+5.0.3
+
+- fixed PS/2 mouse - added missing rc.modules
+
+
+5.0.2
+
+- better international support (more suitable default font in KDE)
+- fixed perl warning messages
+- fixed USB devices recognition during boot, removed ub USB driver
+- removed some TipsOfTheDay
+- cdrom devices are mounted with iso9660 now
+- added Linux kernel 2.6.11.7
+
+
+5.0.1
+
+- X fonts are configured properly now, international characters should work OK
+- linux live scripts handle automounting differently, thus SLAX should find
+  even usb devices, and cdrom devices are mounted to /mnt/cdrom_hdc for example.
+  Also initrd contains codepage cp437 module for access to vfat filesystems
+- udev is started even with nohotplug boot argument
+- MySLAX creator upgraded to 1.7
+- fluxbox command replaced by flux one
+- gui* scripts start xwindow in vesa mode, use xconf manually
+- fixed slax-install and heavily tested
+
+
+5.0.0
+
+- added Linux kernel 2.6.11.6
+- based on Slackware-current and Linux Live 5 with UnionFS and SquashFS support
+- added ALSA sound drivers 1.0.9rc2
+- added KDE 3.4 with some configuration tweaks to be even nicer
+- added nodma boot option to disable DMA for CDROMs and disks
+- updated nvidia nforce drivers (network, sound)
+- added madwifi Wireless support!
+- added perl so ndiswrapper 1.1 should finaly work
+- mplayer upgraded to 1.0pre6a
+- default sound volume is 77% instead of 88%
+- cdrom is ejected before reboot (by using cdrecord)
+- wheelmouse boot option removed, wheel is used automatically in X
+- boot options mousedev, mouseproto, hrefresh, vrefresh, colordepth removed
+- added madWifi and linux-wlan-ng drivers for WIFI cards
+- removed tohd and fromhd boot options
+- copy2ram boot option forces cd eject automatically
+- removed nolock boot option, cd should be unlocked automatically when slax ends
+- removed hdc=ide-scsi boot option, works automatically with kernel 2.6
+- removed firewall option, firewall is started automatically and disables
+  all incomming connections to ports other than 21 22 23 25 80 110
+- removed 845patch boot option
+- added webconfig boot option, to save/restore config on SLAX website!
+- added MySLAX creator to edit SLAX iso in Windows
+
+
+4.2.0
+
+- added Linux kernel 2.4.28-pre4 with SATA support as modules
+- added some missing cheatcodes to cheatcodes.txt on the CD
+- added toram boot option, a synonym for copy2ram
+- added X.org 6.8.1
+- added KDE 3.3.1
+- added KOffice 1.3.3
+- added ndiswrapper 0.10 (allows using Windows drivers for wifi cards)
+- added sudo, guest can start gui by using it
+- added beep-media-player (xmms clone with very nice skin)
+- added user "guest" with password "guest". Please understand that guest
+  is a non-root user so you can't start any software in SLAX which would
+  need root priviledges. GUI can be started (sudo is used).
+- added "noguest" boot parameter to disable guest user during boot
+- added "norestore" boot parameter to disable autorestoring of saved config
+- added "home=" boot parameter to mount root's home from file or device
+- slax-install disables guest user account from SLAX installed to harddisk
+  You will need to execute "usermod -U guest" as root to enable it back.
+- mouseproto boot option now affects GPM too.
+- fixed "slax gui" boot parameter. Only guisafe and guifast were working.
+- removed some KDE games, I'm sorry. kdemine won't be added.
+- removed juk audio player, it crashed all the time ...
+- stripped all unneeded symbols from KDE libraries to make KDE even smaller,
+
+
+4.1.4
+
+- added Linux Kernel 2.4.28-pre2 with SATA support compiled in!
+- added KDE 3.3.0, see new KDEpim, it's amazing!
+- added KOffice 1.3.2, K3B 0.11.14
+- added rdesktop, KDE's krdc is using it
+- added cheatcodes.txt to CD's root directory
+- added mplayer 1.0-pre5, recompiled with alot of options
+- added guisafe and guifast boot options
+- kolourpaint is a standard part of KDE now
+- fixed autorun.inf
+- fixed xconf script (remove doubled refresh values)
+- modified gui.conf, default horizsync is now 30-64
+- dbdiff shows error message while restoring configuration from different SLAX version
+- fixed slax-install script
+- preserve package data in /var to allow removing packages after installing slax to disk
+- fixed loading SLAX by using loadlin (initrd size wasn't updated to 9999)
+- remove card decorations for Patience, this saves almost 2 MB!
+
+4.1.3
+
+- added kernel 2.4.27-pre3
+- added /usr/bin/slax-install script, finaly working in textmode.
+  I need some nice GUI for this, any contributors?
+- added "gui" boot option to skip textmode login and autostart Xwindow with KDE
+- added bind (nslookup, host, dig, named cache nameserver, etc)
+- firewall is disabled as default, it caused problems with browsing local LAN.
+  use "slax firewall" boot option to enable it or "/etc/rc.d/rc.firewall start"
+- removed smb4k, konqueror can browse local LAN as well, you can doubleclick
+  the Home icon on the desktop and choose Lan Browser.
+- removed cron hourly jobs (rmmod each hour, which were causing problems)
+- include /home directory in configsave/configrestore
+- added kolorpaint (mspaint alternative, standard part of KDE 3.3)
+- added flac, id3lib support, recompiled k3b and KDE
+- QT is now moved to opt.img, you can easily remove it with KDE at once
+- removed czech language support (visit www.slax.cz for Czech SLAX!)
+- added 4 very nice themes to FluxBox
+- kplayer configured to disable window resizing (when comming back from fullscreen)
+- start ldconfig and fc-cache if SLAX is installed to disk
+- proftpd replaced by vsftpd, it's smaller and easy to configure
+- XFree replaced by X.org
+- When X autoconfig fails, try to use VESA framebuffer (guisafe) automatically
+- Don't remove customization and docbook from KDElibs
+
+
+4.1.2
+
+- based on Slackware-almost-current (with some exceptions)
+- fixed xconf, modified mouse order to assure that the first CoreDevice will work
+- fixed kplayer icon
+- fixed dbdiff (configsave) to skip mounted partitions (or samba shares)
+- fixed juk audio player - recompiled
+- fixed kde audio ripper - lame is used now for encode to mp3
+- added tohd, fromhd and hdsubdir boot options
+- added /etc/slax-version file
+- added /usr/bin/slax-install script, not finished, needs lilo config
+- added gpart (tool for guessing PC-type hard disk partitions)
+- network services are not started automatically at the boot
+- simple firewall is activated disallowing all incomming connections
+  (this could be also done by "/etc/rc.d/rc.firewall start")
+- added "slax server" boot option to enable all network services,
+  it also disables the firewall, allowing all incomming connections
+  (could be also done by "/etc/rc.d/rc.firewall stop")
+- updated DOC_MULTILANG documentation
+
+
+4.1.2-pre1
+
+- based on Slackware-current TODAY
+- don't remove X11 locales now
+- added DOC_MULTILANG, a documentation describing how to create
+  a module for slax with your language
+- added ctorrent (bittorrent client written in c)
+- added lame mp3 encoder
+- added KDE 3.2.2 with QT 3.2.2 and KOffice 1.3.1
+- modified .inputrc to enable czech, russian, and all other keymaps in BASH
+- fixed russian (and probably some other) fonts in KDE
+- fixed create_bootdisk.sh script to make a bootable USB FlashDisk
+- fixed mouseproto, mousedev and wheelmouse boot options
+
+
+4.1.1
+
+- fixed rc.alsa and alsaconf scripts
+- fixed booting problems (I hope, please report)
+- added Parted 1.6.9
+- upgraded netscape plugins to 7.1
+- modified xconf allowing several mice to work in paralel
+- added noapm boot parameter, APM is started automatically now
+- removed imageMagick, it was broken very often
+
+
+4.1.0
+
+- added Kernel 2.4.26 with alsa 1.0.4
+- preserve some locale dirs in X11R6 (C, lib)
+
+
+4.0.8
+
+- removed all version informations from text files except ./etc/issue
+- added smb4k (samba shares browser for KDE)
+- xfree: upgraded fontconfig, freetype and xft
+- ssh daemon is not started automatically, use "sh /etc/rc.d/rc.sshd start"
+
+
+4.0.7
+
+- based on Linux Live scripts 4.0.7
+- recompiled kdemultimedia
+- fixed moduse script, added calling of "manual" module script if exists
+- third argument for dir2img is optional now, it defaults to "/"
+- added Kplayer 0.5-cvs
+- added xvid 1.0.0rc4
+- hopefully fixed some mouse detection problems
+
+
+4.0.5
+
+- better font handling in KDE (rebuilded indexes by kfontinst)
+- forced to kill artsd imediately after logout from KDE to avoid hangups
+- added nc (netcat) package
+- added ALSA 1.0.4 final kernel modules
+- changed order of inserting modules (packs/*.tar.gz files are extracted first)
+- fixed eject boot parameter
+- fixed create_bootdisk.sh script (lilo doesn't store MBR backup now)
+- fixed memtest (finaly)
+- fixed ide-scsi modules loading
+- removed kghostview (use kpdf instead)
+- removed kview (use kuickshow instead)
+- removed noatun (use juk instead)
+- removed kaboodle (use kplayer instead)
+- czech international module released
+
+
+4.0.4
+
+- now based on Linux Live scripts 4.0.4
+
+- added Xfree 4.4.0
+- added KDE 3.2.1 (recompiled and stripped, I'm not using Slackware's KDE)
+- added floppy tools (to be able to work with floppies under KDE)
+- added K3B 0.11.9 with monkeyaudioplugin
+- /dev/cdrom symlink is automatically created now
+- added Smart Boot Manager floppy image (to FLOPPY/ directory on the CD)
+- added memtest boot option to start memtest
+- added 845patch for intel's i845G chipset - start SLAX with "load=845patch"
+  boot option to be able to start Xwindow system on Dell Inspirons
+- removed lang= functionality and implemented load=... boot option to load all
+  specified modules from /optional/ directory (eg. load=wine,xmms,lang_fr)
+- added wheelmouse boot option to force imps/2 mouse protocol for X
+- added mouseproto= boot option to force own protocol (mouseproto=imps/2 = wheelmouse)
+- added mousedev= boot option to specify /dev/mouse symlink. (eg. mouse=/dev/psaux)
+- default KDE audio player changed to juk (Jukebox, very nice)
+
+- fixed smbmount (finaly!) by adding some IBM charset library
+- fixed ftp upload directory permissions
+- fixed moduse (and other script's) problem to locate liblinuxlive
+
+- KDE window decoration changed to Plastik
+- added slax.ico file and autorun.inf for Windows OS
+- added some help messages to rc.M - about nohotplug, nopcmcia, etc.
+- initrd doesn't contain SCSI modules now, it was useless
+- disabled artsmessage about redirecting sound to /dev/null
+
+- slaxbuild: delete_mess replaced by move_mess, files which have to go
+  are not lost, but moved somewhere to /tmp
+
+4.0.1
+
+- now based on 4.0.1 linux live scripts
+- added Kernel 2.4.25 with ovlfs and alsa 1.0.2c
+- added hotplug 05_01_2004
+- changed rc.alsa to modprobe oss emulation before adjusting volume
+- fixed kde arts - it uses Threaded OSS now, should fix alot of troubles in KDE
+- fixed samba, tested
+- rebuilded all fonts caches etc.
+- added DVD symlink
+- added boot parameter probeusb to enable booting from USB FlashDisk
+- floppy automounting only available with "floppy" boot parameter
+- added KDE 3.2 final hacked (and kmail patched)
+- added KOffice 1.3 final
+- added CUPS printing system
+- added script to copy&install SLAX to flashdisk (USB mastorage device) or hda (disk)
+  (./bootfiles/create_bootdisk.sh)
+- added tools/moduse script to use module in Live filesystem on the fly (while running slax)!
+- added tools/modinsert script to insert downloaded modules to LiveCD ISO
+- added debugslax script
+- syslog is started before hotplug to avoid annoying messages
+- removed foreign languages for KDE
+- added SLAX splash screen
+- cursor theme changed to Crystal (from kdelook.org)
+- added new skin for mplayer
+
+3.0.25
+
+- now based on 3.0.25 linux live scripts
+- ee starts kview
+- added floppy automounting
+- fixed dbdiff (configsave and configrestore)
+- added autorestoring configuration from flashdisk or floppy or disc partition
+- added kdepim (kmail etc)
+- added czech(cs), german (de), brazil (pt_BR), french (fr) KDE language support!
+- removed rdesktop, it's no longer needed with KDE's remote desktop connection
+- removed wine
+- fixed loadlin (dos) parameters, I didn't test it
+- modified HorizSync in X config file to get hopefully better display
+- suppressed hotplug error messages (printk)
+
+
+3.0.24
+
+- SLAX is the new name for Slackware-Live!
+
+- Now created by Linux Live scripts
+- Using KDE 3.2beta2!
+- Using KOffice 1.3beta2!
+
+- removed quanta
+- configsave and configrestore doesn't work
+- added glut, libid3tag
+- added Linux kernel 2.4.23
+- removed printing and PDF/PS applications
+- sound volume is set to 88% automatically
+- rc.6 script modified, removed swap unmounting because of ovlfs
+- removed ldconfig and fonts-cache calls from rc.M
+- added monkeyd httpd server with the home in /root/public
+- fixed banana script calling (from /etc/rc.d/rc.httpd)
+- added gui script to autoconfigure Xwindow system
+- added apmd and acpid daemons
+- fixed apm - modprobe apm is not done when noapm kernel parameter is present
+- added nopcmcia kernel parameter
+
+2.9.0.22
+
+removed bitchx, apache, php, mysql, bind
+fixed error message in auto-configrestore
+fixed configsave when overwriting file
+fixed proftpd scoreboard file
+configsave takes care about /dev too
+proftpd autoconfigured now, created world-writable directory /home/ftp/upload 
+added new primary Wallpaper by JR
+added new kernel 2.4.22 with XFS support, precompiled from Slackware
+added cups
+added dvd+rw tools
+added alsa drivers and kernel modules
+added fluxbox 0.9.6pre1
+added mplayer 1.0pre1
+alot of other packages added
+
+2.9.0.21
+
+added kernel 2.4.21 (doesn't run under vmware?)
+added isolinux.bin
+added mplayer 0.91
+added kopete 0.71
+added k3b 0.9
+added bootdisk.img.gz to /DOS directory - a bootdisk image
+adde apache, php, mysql, mutt, procmail
+added some help to isolinux/create_bootiso
+added KDE 3.1.3
+added new wallpaper :)
+apm support started atomatically
+dbdiff rewrited, should work better and faster than ever!
+initrd searches for dbdiff.tar.gz and tries to run it automatically
+fixed bug with /var/empty
+gpm is not automatically started, it caused some problems. If you need the mouse in commandline, then you sure know how to start it manually
+initrd uses 13 MB of RAM now
+win renamed to gui, winfast renamed to guifast
+removed bdiff (binary diff). It was slow
+
+2.9.0.20
+
+added bdiff, dbdiff
+added xdos (dosemu+freedos suite)
+added samba client and smbmount, nfs utils, rdist, rsync, nmap, bitchX
+added joe, jove, jed editors, "most" filter
+added fluxbox 0.9.4 window manager!
+added raidtools, jfsutils, reiserfsprogs, xfsprogs, umsdos-progs, zoneinfo, ... a lot of other things
+added splash screen, to help with boot-parameters for kernel
+ability to install your own packages (in /usr/local)
+recompiled mplayer to gain better performance, but it seems won't help...
+mounting CDs - egrep replaced by grep -i, mounting all partitions first, then searching for IMGs
+(so added the possibility to copy the CD to harddisk)
++Also you can use livecd_subdir=... kernel variable when .img files are copied to non-rootdir on hdd
+searching for CDs in /proc/sys/dev/cdrom/info
+added espGhostScript, GimpPrint, any2ps, gnu-gs-fonts to show PDF files in kghostview
+added Kgraphics including PDF viewer, image editor, screenshot tool, and more
+created xpdf symlink to run kghostview as a PDF viewer
+created ee symlink to run kview as an image viewer
+all .cram files renamed to .img (so you can copy all files to DOS partition)
+initrd is back to 16 MB now, we are mounting tmpfs to /root
+removed netscape. Konqueror can use flash plugins so there is no need for NS anymore
+removed some KDE useless themes
+executables are compressed by upx packer
+
+2.9.0.16
+
+added hotplug 2003_05_01
+some fixes in /etc
+bootprompt waits 3 seconds now (hold shift when booting)
+tagfiles (for Slackware installing) included (see devel scripts)
+/boot directory is no longer included as a CRAM image, it's not necessary
+
+2.9.0.15
+
+ISO image fits to the 193MB CD-RW medium now!
+fixed boot problem on some machines (upgraded isolinux.bin)
+new mouse cursors for xWindow
+added KDE 3.1.2
+added Kopete 0.6.2 (a lot of bugs fixed)
+added flag for international keyboard support under KDE
+added possibility to run something automatically after booting (autoexec)
+added Quanta HTML and PHP wysiwyg (what you see is what you get) editor
+ramdisk takes 22 MB now, to raise free ramdisk space
+mplayer recompiled for cpu-autodetecting
+removed some 75dpi international fonts
+removed emacs
+
+2.9.0.14:
+
+added KOffice
+removed all *.h and *.c files
+added the possibility to pass kernel parameters during boot (hold Shift)
+fixed /var/lib/ directory to allow changing of keyboard layout
+
+2.9.0.13:
+
+minor bugfixes with USB mouse detection
+added KDE 3.1.1, k3b (burning GUI for KDE)
+removed all development packages (/d directory, xfree86-devel)
+added netscape 7
+
+2.9.0.12:
+a lot of bugfixes with USB detection
+
+2.9.0.11:
+usb mouse support for console and X
+mplayer 0.90 final
+added packages: bison byacc flex
+
+2.9.0.10:
+some bugfixes
+login help change
+run dhcpcd AFTER loading modules for network card(s).
+loadlin for dos added to the CD tree
+slackware setup scripts (/var/log/setup) copyed now to initrd
+created script lynx to call links (for mc extension filter)

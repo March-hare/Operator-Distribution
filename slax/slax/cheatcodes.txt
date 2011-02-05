@@ -1,0 +1,135 @@
+Cheatcodes for SLAX.
+====================
+
+Boot parameters (also known as cheatcodes) are used to affect the
+booting process of SLAX. Some of them are common for all Linuxes, others
+are specific for SLAX only. You can use them to disable desired kind of
+hardware detection, to start SLAX from harddisk, to skip the login
+prompt and start GUI, etc.
+   
+Reboot your computer and wait several seconds until nice  graphical slax
+logo appears with a boot menu (it's there usually for less then 9 seconds).
+Choose your desired menu entry and hit Tab, which will allow you to edit the
+command line. Add your desired boot argument from the list below, to affect
+booting the way you like:
+
+
+acpi=off
+nohotplug
+nopcmcia
+noagp
+
+   ... disable specified hardware autodetection in the case of hangups
+       Your hardware won't be detected at all, you'll have to use "pcimodules"
+       command after logging into SLAX and you'll have to try to modprobe
+       all needed modules from the list manually
+
+nodma
+
+   ... disable DMA for all CD-ROMs and disks
+
+
+noauto
+
+   ... list harddisks in fstab with 'noauto', so you have to mount every
+       disk manually in order to access it.
+
+nohd
+
+   ... don't even know about any harddisks at all.
+
+nocd
+
+   ... don't even know about any cdroms at all.
+
+nosound
+
+   ... mute sound instead of raising volume to 77%
+
+
+from=/dev/hda1/slax.iso
+from=path/to/slax.iso
+from=/dev/hda1
+from=path/to/slax/
+
+   ... To load SLAX data from different place instead of the boot device.
+   ... First example will search for slax.iso, only on hda1
+   ... Second example will search for 'path/to/slax.iso' on all devices.
+       The first device containing the path/file is used
+   ... Third example expects that the ISO is unpacked to hda1
+   ... Fourth example searches through all disks for a directory 'path/to/slax'
+       and expects content of unpacked ISO inthere
+
+
+passwd=somepass
+passwd=ask
+
+   ... set root's password to "somepass", or ask (with =ask) for a new password
+       during the boot, before starting slax (don't worry, the new password
+       won't be shown at the login screen)
+
+
+changes=/dev/device
+changes=/dev/device/file.dat
+changes=/path/
+changes=/path/file.dat
+changes=/dev/device/path/
+
+   ... all changes you made in SLAX are kept in memory until you reboot.
+       But with this boot parameter, you tell SLAX to use different device
+       (or a file or directory) than the memory for storing changes. You can,
+       for example, format your disk partition /dev/hda1 with some Linux
+       filesystem (eg. xfs) and then use changes=/dev/hda1 to store all changes
+       to that disk (it will be stored in 'changes' directory on that disk.
+       This way you won't loose your changes after reboot.
+   ... if you use a file name instead of device, and the file contains valid
+       filesystem, Slax will mount it as a loop device and will store changes
+       to it. Moreover if you don't specify the device where the file is stored,
+       Slax will try to find it on all your partitions.
+   ... if you use a directory, Slax will save changes to it (it will make a
+       'changes' subdirectory inthere). You don't even need a Linux filesystem
+       on that disk, as the directory will be overlayed by posixovl. This way,
+       you can save your changes even to VFAT or NTFS.
+
+toram
+copy2ram 
+
+   ... copy all files (all required and optional modules) to RAM.
+       You'll need at least 320MB of RAM to do this and boot SLAX properly.
+       This will slow down the boot phase but it will speed up SLAX!
+
+
+load=module
+
+   ... load optional modules from /optional/ directory on the CD.
+       You can use full module name (module.lzm) or you can skip the extension
+
+
+noload=module
+noload=module[1];module[n]
+
+   ...disable loading of any modules specified. This affects all the modules on
+      SLAX CD, including /base and /modules, so using noload=kde will disable
+      loading of all modules with 'kde' in the name. It is useful with copy2ram
+      cheatcode, because any un-used module is not copied to ram. 
+
+
+debug
+
+   ... enable debug mode (and start bash several times during the boot)
+       hit Ctrl+D to continue booting
+   
+
+autoexec=...
+autoexec=startx
+autoexec=xconf;startx
+autoexec=xconf;startx;reboot
+
+   ... Execute specified command(s) instead of SLAX login. In this
+       example, skip slax login prompt and automatically start XWindow
+       system. Use semicolon (;) as command separator.
+   ... Slax will not reboot automatically after the command(s) finish,
+       so if you'd like to restart, specify 'reboot' or 'poweroff' as the
+       last command.
+   ... If you need to use spaces in the commandline, replace them by ~.
+       For example, autoexec=echo~Shutting~power;poweroff will do just like that.
