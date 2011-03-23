@@ -48,9 +48,9 @@ if [ -d $TARGET ]; then
   DELTARGET=0
 fi
 if [ $VERBOSE -gt 0 ]; then
-  echo $MOUNT $SUGGEST $TARGET
+  echo $MOUNT $ISONAME $TARGET
 fi
-$MOUNT $SUGGEST $TARGET
+$MOUNT $ISONAME $TARGET
 if [ 0 != $? ]; then
   echo "Sorry we were not able to mount the device"
   exit;
