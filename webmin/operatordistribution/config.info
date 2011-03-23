@@ -1,0 +1,4 @@
+march-hare_conf=Operator Distribution configuration file,8
+sip_conf=Asterisk Sip confgiguration file,8
+ca_name=Certificate Authority name,0
+collective_name=Collective Name,0

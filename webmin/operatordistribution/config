@@ -1,0 +1,3 @@
+operatordistribution_conf=/etc/operatordistribution.conf
+sip_conf=/etc/asterisk/sip.conf
+collective_name=March-Hare Communications Collective

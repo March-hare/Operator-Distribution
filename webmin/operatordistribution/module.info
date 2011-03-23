@@ -1,0 +1,6 @@
+longdesc=March-Hare Operator Distribution Manager
+name=March-Hare Operator Distribution Manager
+category=servers
+desc=March-Hare Operator Distribution Manager
+depends=1.070 openvpn
+version=0.001

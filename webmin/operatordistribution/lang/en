@@ -1,0 +1,32 @@
+title_od=Operator Distribtion Administration
+march-hare_tagline=The Future is Unwritten
+new_account_title=New Account
+handle_label=Handle
+backdoor_label=Alternate contact info
+generate_keys_label=Generate Openvpn Keys
+email_label=Email Address
+
+create_client_title=Create New Client
+create_client_header=New Account details
+edit_client_email=Email address
+edit_client_password=Password
+edit_client_computer=Computer Name *
+edit_client_computer_note=* Optional.  Only useful if you will be creating accounts for a user with the same email address for access on multiple computers.
+create_client_eaddress=Invalid email address
+create_client_epassword=Invalid password
+create_key_eca_name=There was a problem finding the systems certificate authority name
+create_account_eunique=Account is not unique
+
+new_openvpn_ca=Configuration for secure communications
+edit_collective_name=Name of collective
+edit_operatordistribution_servername=Name of server
+edit_administrative_email=Email of administrator
+create_ca_eservername=Invalid servername
+create_ca_ecollectivename=Invalid collective name
+
+manage_accounts_title=Manage Accounts
+insert_usb=Please insert a bootable usb device.  After completion this device will be completely formated and will contain a bootable operator distribution setup for secure communication.  If you already have the device inserted, please remove and re-insert it.
+device_we_recieved=Are you sure you want to use device
+unknown_user_internal_error=We did not recieve a valid user to create a key for.
+unknown_user_config=We were not able to find the user in the system config file.  You may have to recreate this account.
+user_keys_not_found=We were not able to find the users keys.  You may have to regenerate this account.
