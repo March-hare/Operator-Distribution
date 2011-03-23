@@ -1,0 +1,32 @@
+#!/bin/bash
+#install openvpn and asterisk
+
+function prepare_install()
+{
+  # enable universe packages
+  pushd REMASTER_DIR="$REMASTER_HOME/remaster-root"
+  sed -i "s/^# \+\(deb.*universe\)$/\1/" etc/apt/sources.list
+	apt-get update
+  apt-get upgrade --assume-yes
+}
+
+function install_packages()
+{
+	apt-get install --assume-yes --force-yes "$@"
+}
+
+function remove_packages()
+{
+	apt-get --purge remove --assume-yes --force-yes "$@"
+}
+
+prepare_install
+# If the host is running a different kernel version this may fail unless you 
+# set KVERS to the kernel that will be used by the liveCD
+install_packages openvpn asterisk
+
+# install webmin
+wget "http://downloads.sourceforge.net/project/webadmin/webmin/1.530/webmin_1.530_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1300131418&use_mirror=iweb"
+dpkg -i webmin*deb
+# install any additional dependencies
+apt-get -f install
