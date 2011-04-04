@@ -23,6 +23,7 @@ edit_operatordistribution_servername=Name of server
 edit_administrative_email=Email of administrator
 create_ca_eservername=Invalid servername
 create_ca_ecollectivename=Invalid collective name
+edit_routable_address=A publicly routable IP address or hostname where this server can be reached at.  This value will be hardcoded into client configurations so if you expect your ip address to change you will need to set up dynamic dns.
 
 manage_accounts_title=Manage Accounts
 insert_usb=Please insert a bootable usb device.  After completion this device will be completely formated and will contain a bootable operator distribution setup for secure communication.  If you already have the device inserted, please remove and re-insert it.
@@ -30,3 +31,37 @@ device_we_recieved=Are you sure you want to use device
 unknown_user_internal_error=We did not recieve a valid user to create a key for.
 unknown_user_config=We were not able to find the user in the system config file.  You may have to recreate this account.
 user_keys_not_found=We were not able to find the users keys.  You may have to regenerate this account.
+od_base_not_found=The OD-client base files were not in /usr/local/uck.  You either got a bad copy of the distro or you deleted them.
+
+configure_ekiga=Configure Ekiga
+econfigure_ekiga=Failed configuring ekiga
+disable_ekiga_assistant=Disable Ekiga assistant
+edisable_ekiga_assistant=There was a problem disabling the Ekiga assistant
+remaster_rootfs=Remaster OD-client root filesystem
+eremaster_rootfs=There was a problem remastering the rootfs
+remove_partitions=Remove exisiting partitions on $1
+eremove_partitions=There was a problem removing the existing partitions on $1
+resize_partition=Resizing partition $1 to $2 k
+eresize_partition=There was a problem resizing partition $1 to $2 k
+create_partition=create a new partition on $1
+ecreate_partition=create a new partition on $1
+install_extlinux=Install extlinux
+einstall_syslinux=There was a problem installing extlinux
+install_syslinux=Install syslinux on $1
+einstall_syslinux=There was a problem installing syslinux on $1
+copy_mbr=Copying MBR to $!
+ecopy_mbr=There was a problem copying the master boot record to $1
+mkfs=Creating a filesystem on $1
+emkfs=There was a problem creating a filesystem on $1
+mount_and_copy=Mounting the new filesystem on $1 and copying the Operator Distribution Client to it.
+emount_and_copy=There was a problem mounting the new filesystem on $1 and copying the Operator Distribution Client to it.
+create_casper_rw=Creating the persistent file storage.
+ecreate_casper_rw=There was a problem creating the persistent file storage.
+umount=Unmounting $1
+eumount=There was a problem unmounting $1
+make_bootable=Making the first partition bootable
+emake_bootable=There was a problem making the first partition bootable
+
+please_be_patient=The next command may take a bit of time.  Please be patient.
+
+estart_vpn=There was a problem starting the vpn;

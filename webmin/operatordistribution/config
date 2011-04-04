@@ -1,3 +1,6 @@
-operatordistribution_conf=/etc/operatordistribution.conf
 sip_conf=/etc/asterisk/sip.conf
+meetme_conf=/etc/asterisk/meetme.conf
+extensions_conf=/etc/asterisk/extensions.conf
 collective_name=March-Hare Communications Collective
+uck_base=/usr/local/uck
+routable_address=failover.hackbloc.org

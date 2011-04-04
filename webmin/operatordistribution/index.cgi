@@ -31,7 +31,9 @@ print "<link type=\"text/css\" rel=\"StyleSheet\" href=\"operatordistribution.cs
 process_action() if ($in{'action'});
 
 # If the ca has not been created then create it prompting the user for needed 
-# info
+# info.
+# TODO: What if we already have the config set?  Should it automatically create
+# the setup?
 $ca = &foreign_call('openvpn', "ReadCAtoList");
 if ((scalar @$ca) < 1) {
   new_openvpn_ca();
@@ -101,7 +103,7 @@ sub new_client{
     &ui_textbox('KEY_OU', undef, 50));
 
   print &ui_table_row($text{'backdoor_label'}, 
-    &ui_textbox('BACKDOR','ie. (888) dead-cop, carrier pidgin named siesl',50));
+    &ui_textbox('BACKDOOR','ie. (888) dead-cop, carrier pidgin named siesl',50));
 
   print &ui_table_end();
   print ui_form_end([ [ undef, $text{'create'} ] ]);
@@ -123,6 +125,10 @@ sub new_openvpn_ca {
   print ui_table_row($text{'edit_administrative_email'},
     ui_textbox('KEY_EMAIL', '', 40));
 
+  # Input for public addr
+  print ui_table_row($text{'edit_routable_address'},
+    ui_textbox('KEY_ADDR', '', 40));
+
   # Show buttons at the end of the form
   print ui_table_end();
   print ui_form_end([ [ undef, $text{'create'} ] ]);
@@ -131,11 +137,24 @@ sub new_openvpn_ca {
 sub process_action {
   if ($in{'action'} eq 'new_openvpn_ca') {
     create_new_openvpn_ca();
+    create_new_openvpn_server_key();
+    create_new_openvpn_server_conf();
+
+    # Copy over our default sip.conf and extensions.conf files
+    # TODO: make a backup of any existing config files
+    $mdir = &module_root_directory("operatordistribution");
+    File::Copy::copy($mdir.'/sip.conf',$config{'sip_conf'}); 
+    File::Copy::copy($mdir.'/extensions.conf',$config{'extensions_conf'}); 
+    File::Copy::copy($mdir.'/meetme.conf',$config{'meetme_conf'}); 
+
     $in{'KEY_EMAIL'} =~ /^([^@]+)@/;
     my $handle = $1;
     $extension = create_asterisk_sip_account($handle);
+    update_config('routable_address', $in{'edit_routable_address'});
     update_config($in{'KEY_EMAIL'} .':'. $in{'KEY_OU'} .':extension', $extension);
 
+    # TODO: create a server key, this will be used on this host for the vpn server
+    # TODO: create the vpn server configuration and start it.
     # TODO: configure ekiga on this box to use this account.
     # TODO: set the system hostname to KEY_CN
   }
@@ -147,7 +166,7 @@ sub process_action {
 
 sub process_new_account {
   # make sure this is a unique account
-  error('create_account_eunique')
+  error($text{'create_account_eunique'})
     if (!is_account_unique());
 
   # Create a new openvpn key pair
