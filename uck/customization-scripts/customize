@@ -119,7 +119,9 @@ prepare_install || failure "Preparing installation failed, error=$?"
 
 echo "Installing language packs ($LIVECD_LANGS)..."
 
-PACKAGES_TO_INSTALL="openvpn asterisk"
+PACKAGES_TO_INSTALL="openvpn asterisk ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules"
+#TODO: get perl to install the following CPAN module: Asterisk::config
+
 LANGPACKS_CONCATENATED=""
 
 if [ -n "$LIVECD_LANGS" ]; then
