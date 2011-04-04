@@ -300,9 +300,6 @@ sub ReadFieldsCA {
     $info_ca = {};
     $dir = $config{'openvpn_home'}.'/'.$config{'openvpn_keys_subdir'}.'/'.$file_name.'/';
     if (-s $dir."ca.config") { do $dir."ca.config"; }
-    use Data::Dumper;
-    print "DEBUG: ". Dumper($info_ca);
-    print "DEBUG: ". Dumper($info_ca);
 }
 
 # legge elenco chiavi per la CA passata (legge file index.txt)

@@ -50,8 +50,6 @@ if (-s $in{'KEY_DIR'}.'/'.$in{'KEY_NAME'}.".key" or -s $in{'KEY_DIR'}.'/'.$in{'K
 &ui_print_header(undef, $text{'title_opnvpn'}, "", "intro", 1, 1, undef,
                 &help_search_link("openvpn", "man", "doc", "google")."<a href=\"index.cgi\">".$text{'title_opnvpn'}."</a>",
                 undef, undef, &text('index_openvpn')." ".&text('version')." ".$config{'openvpn_version'}.", ".&text('index_openssl')." ".&text('version')." ".$config{'openssl_version'});
-print "DEBUG: ". $in{'KEY_DIR'};
-
 &create_key(\%in);
 
 if ($in{'KEY_SERVER'} == 1) {
