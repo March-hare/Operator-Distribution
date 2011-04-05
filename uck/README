@@ -18,3 +18,6 @@ Limitations
 - Do not have anything listening on port 10000 (webmin) when running 
 uck-remaster
 - You will need to have an internet connection when running these scripts.
+- uck-remaster needs to be run as root.  This means the generated iso will be
+owned by root.  You may have to change permissions on it to use with other
+tools.
