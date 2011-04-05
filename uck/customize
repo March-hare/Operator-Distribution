@@ -119,7 +119,7 @@ prepare_install || failure "Preparing installation failed, error=$?"
 
 echo "Installing language packs ($LIVECD_LANGS)..."
 
-PACKAGES_TO_INSTALL="openvpn ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules uck linux-headers-generic"
+PACKAGES_TO_INSTALL="openvpn ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules uck linux-headers-generic lsof"
 
 LANGPACKS_CONCATENATED=""
 
@@ -149,28 +149,30 @@ if [ -n "$LIVECD_LANGS" ]; then
   cpanp -i Asterisk::config
 
   # install webmin
+  # This is to fix some phantom bug that was discovered when testing this 
+  # process.  It turns out that the webmin package will return an error
+  # if there is already a process listening on port 10000.  For some reason
+  # the webmin miniserv kept getting started though.
+  PID=`lsof -i:10000|awk '{print $2}'|tail -1`
+  if [ -n $PID ]; then
+    kill -9 $PID
+  fi
   wget -O /root/webmin-1.530.deb "http://downloads.sourceforge.net/project/webadmin/webmin/1.530/webmin_1.530_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1300131418&use_mirror=iweb"
   dpkg -i /root/webmin-1.530.deb
   # install any additional dependencies
   apt-get -y -f install
+  /etc/init.d/webmin stop
 
   # install the required webmin modules
   wget --no-check-certificate -O /root/openvpn-2.5.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/openvpn-2.5.1.wbm.gz"
   wget --no-check-certificate -O /root/operatordistribution-0.0.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/operatordistribution-0.0.1.wbm.gz"
-  cd /usr/share/webmin
-  tar -zxf /root/openvpn-2.5.1.wbm.gz
-  tar -zxf /root/operatordistribution-0.0.1.wbm.gz
+  perl $SCRIPT_DIR/install_module.pl /root/openvpn-2.5.1.wbm.gz
+  perl $SCRIPT_DIR/install_module.pl /root/operatordistribution-0.0.1.wbm.gz
   rm /root/openvpn-2.5.1.wbm.gz /root/operatordistribution-0.0.1.wbm.gz /root/webmin-1.530.deb
 
   # configure webmin to only listen on local host and not use ssl (avoid 
   # browser warning)
-  echo "gotomodule=operatordistribution" >> /etc/webmin/config
-  grep -q ssl= /etc/webmin/miniserv.conf
-  if [ -z $? ] ; then 
-    sed -i 's/ssl=\d/ssl=0/' /etc/webmin/miniserv.conf
-  else 
-    echo "ssl=0" >> /etc/webmin/miniserv.conf
-  fi
+  sed -i 's/ssl=1/ssl=0/' /etc/webmin/miniserv.conf
   grep -q "bind=" /etc/webmin/miniserv.conf
   if [ -z $? ] ; then 
     sed -i 's/bind=.*/bind=127.0.0.1/' /etc/webmin/miniserv.conf
@@ -192,7 +194,7 @@ if [ -n "$LIVECD_LANGS" ]; then
   Comment[en_US]=
   Comment=
 CONFIG
-  echo 'user_pref("browser.startup.homepage", "https://localhost:10000/operatordistribution");' >> /etc/firefox/profile/prefs.js
+  echo 'user_pref("browser.startup.homepage", "http://localhost:10000");' >> /etc/firefox/profile/prefs.js
 
   # Set up our uck environment for the OD-clients
   # Grab the 10.04 iso from the net and use the uck tools to unpack it
