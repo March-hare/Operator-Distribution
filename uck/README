@@ -1,0 +1,20 @@
+Intro
+=====
+The scripts included here can be used to custom build the OD-server
+
+Usage
+=====
+apt-get install uck
+git clone https://github.com/March-hare/Operator-Distribution.git
+cd Operator-Distribution
+wget http://mirrors.us.kernel.org/ubuntu-releases/10.04.2/ubuntu-10.04.2-desktop-i386.iso
+uck-remaster ubuntu-10.04.2-desktop-i386.iso `pwd`/uck `pwd`
+
+The finished OD-server iso will be in remaster-new-files
+
+Limitations
+===========
+- Only Ubuntu 10.04.2 Desktop is supported right now.
+- Do not have anything listening on port 10000 (webmin) when running 
+uck-remaster
+- You will need to have an internet connection when running these scripts.
