@@ -5,3 +5,15 @@
 ## Description
 
 The Operator Distribution is intended to be a portable computer operating environment that can be preconfigured ahead of time and given to communications operators. The intention of this project is to make a secure and trusted environment for operators to perform their work from as well as develop a platform to deploy other customized utilities like point and click secure conference call solutions.
+
+The solution provided here is the Operator Distribution Server (OD), and is intended to be a starting point for creating OD clients.
+
+## Usage
+Either use the uck scripts to custom build an iso of the OD server or download it from (the project downloads page)[https://github.com/March-hare/Operator-Distribution/archives/master], then install it on a usb key.  You will need persistent storage to save the customizations and settings you make.  This can be done without using a usb key, and is not difficult, but you will have to figure it out on your own.  Installing the iso to a USB key is an easy task made easier by (the UNetBootin utility)[http://unetbootin.sourceforge.net/].  If performing this task is a challange please refer to the results of a google search for "UNetBootin Video Tutorial".
+
+After you have created the bootable USB, boot the system with it.  You have have to (configure you BIOS to boot from the usb before your harddrive)[http://www.pendrivelinux.com/usb-bios-boot-options/]. When the system loads you will be automatically logged in as the ubuntu user.  Set the root password from the terminal ( Applications menu -> Accessories -> Terminal ):
+
+        sudo su -
+        password
+
+Next log into webmin through firefox (http://localhost:10000), which should already be started up for you, with the user root and the password you just set.  The first page you are greeted with will walk you through initializing the system and subsequent pages will allow you to delete or create OD client accounts, or generate new bootable usb drives for those users.
