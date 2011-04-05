@@ -56,7 +56,9 @@ emkfs=There was a problem creating a filesystem on $1
 mount_and_copy=Mounting the new filesystem on $1 and copying the Operator Distribution Client to it.
 emount_and_copy=There was a problem mounting the new filesystem on $1 and copying the Operator Distribution Client to it.
 create_casper_rw=Creating the persistent file storage.
-ecreate_casper_rw=There was a problem creating the persistent file storage.
+ecreate_casper_rw=There was a problem creating the persistent file storage: $1.
+create_casper_rw_fs=Creating the file system for the persistent file storage.
+ecreate_casper_rw_fs=There was a problem creating the file system for the persistent file storage: $1.
 umount=Unmounting $1
 eumount=There was a problem unmounting $1
 make_bootable=Making the first partition bootable
@@ -64,4 +66,7 @@ emake_bootable=There was a problem making the first partition bootable
 
 please_be_patient=The next command may take a bit of time.  Please be patient.
 
-estart_vpn=There was a problem starting the vpn;
+estart_vpn=There was a problem starting the vpn
+
+usb_ready=Your usb-key is ready to hand off to $1
+

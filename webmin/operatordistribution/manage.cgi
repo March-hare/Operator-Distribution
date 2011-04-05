@@ -89,48 +89,8 @@ exit();
   # Prompt for a password
   process_create_usb_stage2()
     if ($in{'stage'} eq 2);
-#  if ($in{'stage'} eq 2) {
-#  $device = $in{'device'};
-#  my $device_filename = '/dev/'. basename($device);
-#  $command = "parted -s $device_filename p|grep ^Disk|awk -F': ' '{print \$2}'";
-#  $size = `$command`;
-#  $command = "df -m|grep ". $device_filename ."1|awk '{print \$3}'";
-#  $newsize = `$command`;
-#  die("Not able to determine the amount of space used by ${device_filename}1") 
-#    if ($newsize !~ /\d+/);
-#
-#  $command="umount /mnt/uck";
-#  &error(&text('eumount', '/mnt/uck')) unless(
-#    foreign_call('openvpn', "PrintCommandWEB", $command, 
-#      &text('umount', '/mnt/uck')));
-#
-#  # First we resize the filesystem ... I think we should do this in k not meg
-#  $command="resize2fs ${device_filename}1 ";
-#  # The use parted to change the partition size
-#  # The check the filesystem for errors.
-#
-#  # determine the size used, resize the partition and create a new one for the
-#  # persistent storage.
-#  $command = "parted -s ${device_filename}1 resize 1 1 $newsize";
-#  print $command;
-#  &error(&text('ecreate_partition', $device_filename, $newsize)) unless(
-#    foreign_call('openvpn', "PrintCommandWEB", $command, 
-#      &text('create_partition', $device_filename, $newsize)));
-#
-#  $command = "parted -s $device_filename mkpart primary $newsize $size";
-#  &error(&text('ecreate_partition', $device_filename)) unless(
-#    foreign_call('openvpn', "PrintCommandWEB", $command, 
-#      &text('create_partition', $device_filename)));
-#
-#  # TODO: in later versions we will be setting this up as an encrypted 
-#  # partition from the casper initramfs startup scripts.
-#  # Create a filesystem on the persistent storage
-#  $partition = $device_filename .'2';
-#  $command="mkfs.ext4 -q -F -L casper-rw $partition";
-#  &error(&text('emkfs', $partition)) unless(
-#    foreign_call('openvpn', "PrintCommandWEB", $command, 
-#      &text('mkfs', $partition)));
-#  }
+  #if ($in{'stage'} eq 2) {
+    #}
 }
 
 # TODO: it would be nice to have some signal indicator on the screen to let the user
@@ -223,16 +183,17 @@ sub process_create_usb_stage2 {
 
   # Get openvpn configs on the client
   # TODO: use uck prefix
-  my $cdir = $config{'uck_base'} . $key_path;
+  my $cdir = $config{'uck_base'} ."/remaster-root/$key_path";
   mkpath($cdir);
   unlink glob("$cdir/*");
   foreach (@keys) {
-    copy($_, $cdir);
+    copy("$key_path/$_", $cdir);
   }
   copy("$key_path/ca.crt", $cdir);
   copy("$key_path/ta.key", $cdir);
-  copy("$key_path/dh". $openvpn::config{'KEY_SIZE'} .".pem", $cdir);
-  $dh = "$key_path/dh". $openvpn::config{'KEY_SIZE'} .".pem";
+  $dh = glob("$key_path/dh*.pem");
+  copy($dh, $cdir);
+
   $host = $config{'routable_address'};
   $config_file = $config{'uck_base'} .'/remaster-root/'. 
     $openvpn::config{'openvpn_home'} .'/'. $config{'ca_name'} .'.conf';
@@ -262,13 +223,13 @@ CONFIG
   # Make sure the client auto starts the vpn.
   $autostart = 'AUTOSTART="'. $config{'ca_name'} .'"';
   $command = "grep -q '^$autostart' ". $config{'uck_base'} 
-    .'remaster-root/etc/default/openvpn';
+    .'/remaster-root/etc/default/openvpn';
   `$command`;
-  if ($?) {
-    $command = "echo $autotart >> ". $config{'uck_base'}
-      .'remaster-root/etc/default/openvpn';
+  if ($? ne 0) {
+    $command = "echo $autostart >> ". $config{'uck_base'}
+      .'/remaster-root/etc/default/openvpn';
     `$command`;
-  }
+  } 
 
   # remaster the root filesystem
   # TODO: we need to not run this through the openvpn::PrintCommandWEB() method
@@ -314,50 +275,50 @@ CONFIG
     foreign_call('openvpn', "PrintCommandWEB", $command, 
       &text('mount_and_copy', $device_filename)));
 
-  #create the filesystem based on the amount of free space we will have
-  $command = "df -m|grep $device_filename|awk '{print \$4}'";
-  $size = `$command`;
-  $command = "dd if=/dev/zero of=/mnt/uck/casper-rw bs=1M count=$size;";
-  $command .= "mkfs.ext4 -q -F -L casper-rw /mnt/uck/casper-rw;";
-  &error($text{'ecreate_casper_rw'}) unless(
-    foreign_call('openvpn', "PrintCommandWEB", $command, 
-      $text{'create_casper_rw'}));
-
   # Install syslinux
-  #$command = "cd /mnt/uck; mkdir boot; mv isolinux boot/extlinux; mv boot/extlinux/isolinux.cfg boot/extlinux/extlinux.conf; extlinux --install boot/extlinux; cd ..";
-  # Install extlinux
-  $command = "cd /mnt/uck; mv isolinux/* .; rmdir isolinux; mv isolinux.cfg syslinux.cfg; mv islinux.bin syslinux.bin; cd ..; umount uck; syslinux ${device_filename}1";
-  &error($text{'einstall_extlinux'}) unless(
+  `mv /mnt/uck/isolinux /mnt/uck/syslinux`;
+  `mv /mnt/uck/syslinux/isolinux.cfg /mnt/uck/syslinux/syslinux.cfg`;
+  `mv  /mnt/uck/syslinux/isolinux.bin  /mnt/uck/syslinux/syslinux.bin`;
+  open(F, ">/mnt/uck/syslinux/syslinux.cfg")
+    or die('Could not re-write /mnt/uck/syslinux/syslinux.cfg');
+  print F <<CONFIG;
+prompt 0
+timeout 1
+totaltimeout 1
+ontimeout linux
+default linux
+label linux
+kernel /casper/vmlinuz
+append  file=/cdrom/preseed/ubuntu.seed boot=casper initrd=/casper/initrd.lz quiet splash persistent noprompt cdrom-detect/try-usb=true --
+CONFIG
+  close F;
+  `umount /mnt/uck`;
+  `syslinux ${device_filename}1`;
+  `mount ${device_filename}1 /mnt/uck`;
+
+  #create the filesystem based on the amount of free space we will have
+  $command = "df -m|grep ". $device_filename ."1|awk '{print \$4}'";
+  $size = `$command`;
+  die("Unable to determine available space left on ${device_filename}1")
+    if ($size !~ /\d+/);
+  #TODO: This needs to have better failure handling.
+  `dd if=/dev/zero of=/mnt/uck/casper-rw bs=1M count=$size`;
+
+  $command = "mkfs.ext4 -q -F -L casper-rw /mnt/uck/casper-rw;";
+  &error(&text('ecreate_casper_rw_fs', $!)) unless(
     foreign_call('openvpn', "PrintCommandWEB", $command, 
-      $text{'install_extlinux'}));
+      $text{'create_casper_rw_fs'}));
 
   $command="umount /mnt/uck";
   &error(&text('eumount', '/mnt/uck')) unless(
     foreign_call('openvpn', "PrintCommandWEB", $command, 
       &text('umount', '/mnt/uck')));
   
-#  # determine the size used, resize the partition and create a new one for the
-#  # persistent storage.
-#  $command = "parted -s $device_filename resize 1 0 $newsize";
-#  &error(&text('ecreate_partition', $device_filename, $newsize)) unless(
-#    foreign_call('openvpn', "PrintCommandWEB", $command, 
-#      &text('create_partition', $device_filename, $newsize)));
-#
-#  $command = "parted -s $device_filename mkpart primary $newsize $size";
-#  &error(&text('ecreate_partition', $device_filename)) unless(
-#    foreign_call('openvpn', "PrintCommandWEB", $command, 
-#      &text('create_partition', $device_filename)));
-#
-#  # TODO: in later versions we will be setting this up as an encrypted 
-#  # partition from the casper initramfs startup scripts.
-#  # Create a filesystem on the persistent storage
-#  $partition = $device_filename .'2';
-#  $command="mkfs.ext4 -q -F -L casper-rw $partition";
-#  &error(&text('emkfs', $partition)) unless(
-#    foreign_call('openvpn', "PrintCommandWEB", $command, 
-#      &text('mkfs', $partition)));
+  # TODO: in later versions we will be setting this up as an encrypted 
+  # partition from the casper initramfs startup scripts.
+  # Create a filesystem on the persistent storage
 
-  print "Your usb-key is ready to hand off to $email.";
+  print &text('usb_ready', $email);
 }
 
 sub process_create_usb_finalize {}
