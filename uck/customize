@@ -172,6 +172,7 @@ if [ -n "$LIVECD_LANGS" ]; then
 
   # configure webmin to only listen on local host and not use ssl (avoid 
   # browser warning)
+  echo "gotomodule=operatordistribution" >> /etc/webmin/config
   sed -i 's/ssl=1/ssl=0/' /etc/webmin/miniserv.conf
   grep -q "bind=" /etc/webmin/miniserv.conf
   if [ -z $? ] ; then 
