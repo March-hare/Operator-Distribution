@@ -119,8 +119,7 @@ prepare_install || failure "Preparing installation failed, error=$?"
 
 echo "Installing language packs ($LIVECD_LANGS)..."
 
-PACKAGES_TO_INSTALL="openvpn asterisk ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules"
-#TODO: get perl to install the following CPAN module: Asterisk::config
+PACKAGES_TO_INSTALL="openvpn ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules uck linux-headers-generic"
 
 LANGPACKS_CONCATENATED=""
 
@@ -144,17 +143,65 @@ if [ -n "$LIVECD_LANGS" ]; then
 	done
 	
 	install_packages $PACKAGES_TO_INSTALL || failure "Installing language packs failed, error=$?"
+  export KVERS=`dpkg -l|grep 'linux-headers-.*-generic' |tail -1|awk '{print $2}'|awk -F'linux-headers-' '{print $2}'`
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get install --assume-yes --force-yes -qq asterisk
+  cpanp -i Asterisk::config
 
   # install webmin
-  wget -o webmin-1.530.deb "http://downloads.sourceforge.net/project/webadmin/webmin/1.530/webmin_1.530_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1300131418&use_mirror=iweb"
-  dpkg -i webmin-1.530.deb
+  wget -O /root/webmin-1.530.deb "http://downloads.sourceforge.net/project/webadmin/webmin/1.530/webmin_1.530_all.deb?r=http%3A%2F%2Fwww.webmin.com%2Fdownload.html&ts=1300131418&use_mirror=iweb"
+  dpkg -i /root/webmin-1.530.deb
   # install any additional dependencies
-  apt-get -f install
+  apt-get -y -f install
 
   # install the required webmin modules
-  wget -o openvpn-2.5.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/openvpn-2.5.1.wbm.gz"
-  wget -o operatordistribution-0.0.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/operatordistribution-0.0.1.wbm.gz"
-	
+  wget --no-check-certificate -O /root/openvpn-2.5.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/openvpn-2.5.1.wbm.gz"
+  wget --no-check-certificate -O /root/operatordistribution-0.0.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/operatordistribution-0.0.1.wbm.gz"
+  cd /usr/share/webmin
+  tar -zxf /root/openvpn-2.5.1.wbm.gz
+  tar -zxf /root/operatordistribution-0.0.1.wbm.gz
+  rm /root/openvpn-2.5.1.wbm.gz /root/operatordistribution-0.0.1.wbm.gz /root/webmin-1.530.deb
+
+  # configure webmin to only listen on local host and not use ssl (avoid 
+  # browser warning)
+  echo "gotomodule=operatordistribution" >> /etc/webmin/config
+  grep -q ssl= /etc/webmin/miniserv.conf
+  if [ -z $? ] ; then 
+    sed -i 's/ssl=\d/ssl=0/' /etc/webmin/miniserv.conf
+  else 
+    echo "ssl=0" >> /etc/webmin/miniserv.conf
+  fi
+  grep -q "bind=" /etc/webmin/miniserv.conf
+  if [ -z $? ] ; then 
+    sed -i 's/bind=.*/bind=127.0.0.1/' /etc/webmin/miniserv.conf
+  else
+    echo "bind=127.0.0.1" >> /etc/webmin/miniserv.conf
+  fi
+
+  # Make sure firefox loads on startup with the webmin interface
+  mkdir -p /etc/skel/.config/autostart
+  cat <<-CONFIG > /etc/skel/.config/autostart/firefox.desktop
+  [Desktop Entry]
+  Type=Application
+  Exec=/usr/bin/firefox
+  Hidden=false
+  NoDisplay=false
+  X-GNOME-Autostart-enabled=true
+  Name[en_US]=firefox
+  Name=firefox
+  Comment[en_US]=
+  Comment=
+CONFIG
+  echo 'user_pref("browser.startup.homepage", "https://localhost:10000/operatordistribution");' >> /etc/firefox/profile/prefs.js
+
+  # Set up our uck environment for the OD-clients
+  # Grab the 10.04 iso from the net and use the uck tools to unpack it
+  wget -O /root/ubuntu-10.04.iso "http://mirrors.us.kernel.org/ubuntu-releases/10.04.2/ubuntu-10.04.2-desktop-i386.iso"
+  mkdir -p /usr/local/uck
+  uck-remaster-unpack-iso /root/ubuntu-10.04.iso /usr/local/uck
+  uck-remaster-unpack-rootfs /usr/local/uck
+  rm -rf /root/ubuntu-10.04.iso
+
 	#NOTE: we first install language pack, then remove others as installing language pack might pull packages
 	#which were not previously present
 	echo "Removing unnecessary language packages..."
@@ -188,4 +235,6 @@ if [ "$RUN_MANUAL_CUSTOMIZATIONS" = "yes" ] ; then
 	done
 fi
 
+apt-get -y autoremove
+apt-get -y clean
 echo "Done"
