@@ -180,3 +180,14 @@ then
 		: do nothing - initrd.lz not used
 	fi
 fi
+
+cat <<ISOLINUX > $INITRD_REMASTER_DIR/isolinux/isolinux.cfg
+prompt 0
+timeout 1
+totaltimeout 1
+ontimeout linux
+default linux
+label linux
+kernel /casper/vmlinuz
+append  file=/cdrom/preseed/ubuntu.seed boot=casper initrd=/casper/initrd.lz quiet splash persistent noprompt cdrom-detect/try-usb=true --
+ISOLINUX
