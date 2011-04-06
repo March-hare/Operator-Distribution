@@ -68,7 +68,7 @@ type=friend";
   # Then add the new sip number to the extensions file
   my $e_conf = new Asterisk::config(file=>$config{'extensions_conf'});
   error('Could not open '. $config{'ext_conf'}) unless $e_conf;
-  $ext = "exten => $extension,1,Dial(SIP,$extension)";
+  $ext = "exten => $extension,1,Dial(SIP/$extension)";
   $e_conf->assign_append(point=>'down', data=>$ext);
   $e_conf->save_file();
 
