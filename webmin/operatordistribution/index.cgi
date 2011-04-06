@@ -147,6 +147,10 @@ sub process_action {
     File::Copy::copy($mdir.'/extensions.conf',$config{'extensions_conf'}); 
     File::Copy::copy($mdir.'/meetme.conf',$config{'meetme_conf'}); 
 
+    # TODO: this should be moved to a function call
+    `asterisk -r -x 'sip reload'`;
+    `asterisk -r -x 'dialplan reload'`;
+
     $in{'KEY_EMAIL'} =~ /^([^@]+)@/;
     my $handle = $1;
     $extension = create_asterisk_sip_account($handle);

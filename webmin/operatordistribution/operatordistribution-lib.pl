@@ -72,6 +72,10 @@ type=friend";
   $e_conf->assign_append(point=>'down', data=>$ext);
   $e_conf->save_file();
 
+  # TODO: this should be moved to a function call
+  `asterisk -r -x 'sip reload'`;
+  `asterisk -r -x 'dialplan reload'`;
+
   return $extension;
 }
 
