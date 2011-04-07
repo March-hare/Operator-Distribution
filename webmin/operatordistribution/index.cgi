@@ -154,7 +154,7 @@ sub process_action {
     $in{'KEY_EMAIL'} =~ /^([^@]+)@/;
     my $handle = $1;
     $extension = create_asterisk_sip_account($handle);
-    update_config('routable_address', $in{'edit_routable_address'});
+    update_config('routable_address', $in{'KEY_ADDR'});
     update_config($in{'KEY_EMAIL'} .':'. $in{'KEY_OU'} .':extension', $extension);
 
     # TODO: create a server key, this will be used on this host for the vpn server
