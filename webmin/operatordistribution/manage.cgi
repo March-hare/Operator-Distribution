@@ -181,6 +181,27 @@ sub process_create_usb_stage2 {
     foreign_call('openvpn', "PrintCommandWEB", $command, $text{'configure_ekiga'}));
   unlink("$config_file.tmp");
 
+  # Configure ekiga to autostart
+  my $ekiga_path = $config{'uck_base'} ."/remaster-root/etc/skel/.config/autostart";
+  mkpath($ekiga_path);
+  open(F, ">$ekiga_path/ekiga.desktop")
+    or die("Could not create the auto startup file for ekiga: $ekiga_path/ekiga.desktop");
+$ekiga_autostart_config = <<CONFIG;
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/ekiga
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=ekiga
+Name=ekiga
+Comment[en_US]=
+Comment=
+CONFIG
+
+  print F $ekiga_autostart_config;
+  close F;
+
   # Get openvpn configs on the client
   # TODO: use uck prefix
   my $cdir = $config{'uck_base'} ."/remaster-root/$key_path";
