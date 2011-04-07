@@ -181,7 +181,9 @@ then
 	fi
 fi
 
-cat <<ISOLINUX > $INITRD_REMASTER_DIR/isolinux/isolinux.cfg
+# Setup quickboot into the OD
+pushd "$ISO_REMASTER_DIR"/isolinux >/dev/null
+cat <<ISOLINUX > isolinux.cfg
 prompt 0
 timeout 1
 totaltimeout 1
