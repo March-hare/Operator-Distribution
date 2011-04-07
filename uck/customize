@@ -166,8 +166,8 @@ if [ -n "$LIVECD_LANGS" ]; then
   # install the required webmin modules
   wget --no-check-certificate -O /root/openvpn-2.5.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/openvpn-2.5.1.wbm.gz"
   wget --no-check-certificate -O /root/operatordistribution-0.0.1.wbm.gz "https://github.com/downloads/March-hare/Operator-Distribution/operatordistribution-0.0.1.wbm.gz"
-  perl $SCRIPT_DIR/install_module.pl /root/openvpn-2.5.1.wbm.gz
-  perl $SCRIPT_DIR/install_module.pl /root/operatordistribution-0.0.1.wbm.gz
+  perl $SCRIPT_DIR/install-module.pl /root/openvpn-2.5.1.wbm.gz
+  perl $SCRIPT_DIR/install-module.pl /root/operatordistribution-0.0.1.wbm.gz
   rm /root/openvpn-2.5.1.wbm.gz /root/operatordistribution-0.0.1.wbm.gz /root/webmin-1.530.deb
 
   # configure webmin to only listen on local host and not use ssl (avoid 
