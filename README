@@ -17,3 +17,5 @@ After you have created the bootable USB, boot the system with it.  You have have
         password
 
 Next log into webmin through firefox (http://localhost:10000), which should already be started up for you, with the user root and the password you just set.  The first page you are greeted with will walk you through initializing the system and subsequent pages will allow you to delete or create OD client accounts, or generate new bootable usb drives for those users.
+
+The conference call extension is 500.
