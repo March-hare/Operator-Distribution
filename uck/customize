@@ -197,6 +197,22 @@ if [ -n "$LIVECD_LANGS" ]; then
 CONFIG
   echo 'user_pref("browser.startup.homepage", "http://localhost:10000");' >> /etc/firefox/profile/prefs.js
 
+  # We have a utility to prompt the user for a new root password if it has 
+  # not been set yet.
+  cp $SCRIPT_DIR/set-root-pass.pl /usr/local/bin/
+  cat <<-CONFIG > /etc/skel/.config/autostart/set-root-pass.desktop
+  [Desktop Entry]
+  Type=Application
+  Exec=/usr/local/bin/set-root-pass.pl
+  Hidden=false
+  NoDisplay=false
+  X-GNOME-Autostart-enabled=true
+  Name[en_US]=set-root-pass.pl
+  Name=set-root-pass.pl
+  Comment[en_US]=
+  Comment=
+CONFIG
+
   # Set up our uck environment for the OD-clients
   # Grab the 10.04 iso from the net and use the uck tools to unpack it
   wget -O /root/ubuntu-10.04.iso "http://mirrors.us.kernel.org/ubuntu-releases/10.04.2/ubuntu-10.04.2-desktop-i386.iso"
