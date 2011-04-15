@@ -73,8 +73,8 @@ type=friend";
   $e_conf->save_file();
 
   # TODO: this should be moved to a function call
-  `asterisk -r -x 'sip reload'`;
-  `asterisk -r -x 'dialplan reload'`;
+  $meow = `asterisk -r -x 'sip reload'`;
+  $meow = `asterisk -r -x 'dialplan reload'`;
 
   return $extension;
 }
@@ -340,4 +340,29 @@ sub create_ca_config {
   }
   print CONFIG "}\n";
   close CONFIG;
+}
+
+#
+sub generate_custom_ekiga_config {
+  my ($collective, $server, $extension, $port) = @_;
+  $port = 5060 if (!defined($port));
+
+  # Read in the ekiga config template 
+  $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml';
+  {
+    local $/=undef;
+    open (F, $config_file) or
+      die("Could not open ekiga config template ($config_file): $!");
+    binmode FILE;
+    $config = <F>;
+    close F;
+  }
+ 
+  # Replace appropriate values with the openvpn interface of the asterisk server
+  $config =~ s/\*\*\*COLLECTIVE\*\*\*/$collective/g;
+  $config =~ s/\*\*\*SERVER\*\*\*/$server/g;
+  $config =~ s/\*\*\*EXTENSION\*\*\*/$extension/g;
+  $config =~ s/\*\*\*PORT\*\*\*/$port/g;
+
+  return $config;
 }
