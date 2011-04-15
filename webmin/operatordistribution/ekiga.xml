@@ -675,7 +675,7 @@
       <key>protocols/sip/listen_port</key>
       <schema_key>/schemas/apps/ekiga/protocols/sip/listen_port</schema_key>
       <value>
-        <int>5060</int>
+        <int>***PORT***</int>
       </value>
     </entry>
     <entry>
