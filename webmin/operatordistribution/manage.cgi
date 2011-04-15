@@ -148,25 +148,33 @@ sub process_create_usb_stage2 {
   # make sure we have a OD-client directory to customize
   error('process_create_usb_stage2: could not find OD-client base directory: '.
     $text{'od_base_not_found'})
-    if (! -d $config{'uck_base'});
+    if (
+      ! -d $config{'uck_base'} ||
+      ! -f $config{'uck_base'}.'/remaster-root/etc/apt/sources.list'
+    );
+
+  # make sure the OD-client universe repo is enabled
+  $command = 'sed -i \'s/^#\s*\(.*universe\)$/\1/\' '. $config{'uck_base'} .'/remaster-root/etc/apt/sources.list';
+  `$command`;
+
+  # make sure the OD-client system software is updated and upgraded
+  $command = 'uck-remaster-chroot-rootfs '. $config{'uck_base'} .' apt-get update';
+  `$command`;
+  $command = 'uck-remaster-chroot-rootfs '. $config{'uck_base'} .' apt-get upgrade';
+  `$command`;
+
+  # make sure ekiga and openvpn are installed on the client
+  $command = 'uck-remaster-chroot-rootfs '. $config{'uck_base'} .' apt-get install openvpn ekiga';
+  `$command`;
 
   # Read in the ekiga config template 
-  $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml';
-  {
-    local $/=undef;
-    open (F, $config_file) or
-      die("Could not open ekiga config template ($config_file): $!");
-    binmode FILE;
-    $config = <F>;
-    close F;
-  }
- 
-  # Replace appropriate values with the openvpn interface of the asterisk server
-  $config =~ s/\*\*\*COLLECTIVE\*\*\*/$config{'collective_name'}/g;
-  $config =~ s/\*\*\*SERVER\*\*\*/$config{'private_address'}/g;
-  $config =~ s/\*\*\*EXTENSION\*\*\*/$extension/g;
-
-  open (F, ">$config_file.tmp") or
+  $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml.tmp';
+  $config = generate_custom_ekiga_config(
+    $config{'collective_name'},
+    $config{'private_address'},
+    $extension
+  );
+  open (F, ">$config_file") or
     die("Could not open temprary ekiga config ($config_file): $!");
   print F $config;
   close F;
@@ -175,11 +183,11 @@ sub process_create_usb_stage2 {
   $command = 
     "gconftool-2 --direct --config-source xml:readwrite:". $config{'uck_base'}
     ."/remaster-root/etc/gconf/gconf.xml.defaults ".
-    "--load $config_file.tmp";
+    "--load $config_file";
 
   &error($text{'econfigure_ekiga'}) unless(
     foreign_call('openvpn', "PrintCommandWEB", $command, $text{'configure_ekiga'}));
-  unlink("$config_file.tmp");
+  unlink($config_file);
 
   # Configure ekiga to autostart
   my $ekiga_path = $config{'uck_base'} ."/remaster-root/etc/skel/.config/autostart";
