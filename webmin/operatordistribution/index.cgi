@@ -147,19 +147,51 @@ sub process_action {
     File::Copy::copy($mdir.'/extensions.conf',$config{'extensions_conf'}); 
     File::Copy::copy($mdir.'/meetme.conf',$config{'meetme_conf'}); 
 
-    # TODO: this should be moved to a function call
-    `asterisk -r -x 'sip reload'`;
-    `asterisk -r -x 'dialplan reload'`;
-
     $in{'KEY_EMAIL'} =~ /^([^@]+)@/;
     my $handle = $1;
     $extension = create_asterisk_sip_account($handle);
     update_config('routable_address', $in{'KEY_ADDR'});
     update_config($in{'KEY_EMAIL'} .':'. $in{'KEY_OU'} .':extension', $extension);
 
-    # TODO: create a server key, this will be used on this host for the vpn server
-    # TODO: create the vpn server configuration and start it.
+    # KEY_NAME is set via create_new_openvpn_server_key above
+    create_asterisk_sip_account($in{'KEY_NAME'});
+
     # TODO: configure ekiga on this box to use this account.
+    $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml.tmp';
+    $config = generate_custom_ekiga_config(
+      $config{'collective_name'},
+      $config{'private_address'},
+      $extension, 5061
+    );
+    open (F, ">$config_file") or
+      die("Could not open temprary ekiga config ($config_file): $!");
+    print F $config;
+    close F;
+    $command = "sudo -u ubuntu /usr/bin/gconftool-2 --load $config_file";
+    `$command`;
+    unlink($config_file);
+
+    # Configure ekiga to autostart
+    my $ekiga_path = "/home/ubuntu/.config/autostart";
+    mkpath($ekiga_path);
+    open(F, ">$ekiga_path/ekiga.desktop")
+      or die("Could not create the auto startup file for ekiga: $ekiga_path/ekiga.desktop");
+$ekiga_autostart_config = <<CONFIG;
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/ekiga
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=ekiga
+Name=ekiga
+Comment[en_US]=
+Comment=
+CONFIG
+
+    print F $ekiga_autostart_config;
+    close F;
+
     # TODO: set the system hostname to KEY_CN
   }
 
