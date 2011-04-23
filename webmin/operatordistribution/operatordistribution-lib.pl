@@ -306,13 +306,15 @@ CONFIG
 
   print $text{'estart_vpn'} if ($rv);
 
-  # Make sure the server starts across reboots.
-  $autostart = 'AUTOSTART="'. $config{'ca_name'} .'"';
-  $command = "grep -q '^$autostart' /etc/default/openvpn";
-  `$command`;
-  if ($?) {
-    $command = "echo $autotart >> /etc/default/openvpn";
-    `$command`;
+  open F, '</etc/default/openvpn' or
+    die('Could not open /etc/default/openvpn');
+  $etc_default_openvpn = do { local $/; <F> };
+  close F;
+  if ($etc_default_openvpn !~ /$config{'ca_name'}/) {
+    open F, '>>/etc/default/openvpn' or
+      die('Could not open /etc/default/openvpn');
+    print F 'AUTOSTART="'. $config{'ca_name'} ."\"\n";
+    close F;
   }
 }
 
