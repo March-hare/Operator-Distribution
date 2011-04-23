@@ -350,7 +350,7 @@ sub generate_custom_ekiga_config {
   $port = 5060 if (!defined($port));
 
   # Read in the ekiga config template 
-  $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml';
+  $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml.tpl';
   {
     local $/=undef;
     open (F, $config_file) or
