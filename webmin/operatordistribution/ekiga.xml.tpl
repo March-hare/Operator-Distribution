@@ -111,7 +111,7 @@
       <schema_key>/schemas/apps/ekiga/contacts/roster</schema_key>
       <value>
         <string>&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;list&gt;&lt;entry uri=&quot;sip:600@10.1.254.1&quot;&gt;&lt;name&gt;Echo test&lt;/name&gt;&lt;group&gt;Services&lt;/group&gt;&lt;/entry&gt;&lt;entry uri=&quot;sip:500@10.1.254.1&quot;&gt;&lt;name&gt;Conference room&lt;/name&gt;&lt;group&gt;Services&lt;/group&gt;&lt;/entry&gt;&lt;/list&gt;
+&lt;list&gt;&lt;entry uri=&quot;sip:600@***SERVER***&quot;&gt;&lt;name&gt;Echo test&lt;/name&gt;&lt;group&gt;Services&lt;/group&gt;&lt;/entry&gt;&lt;entry uri=&quot;sip:500@***SERVER***&quot;&gt;&lt;name&gt;Conference room&lt;/name&gt;&lt;group&gt;Services&lt;/group&gt;&lt;/entry&gt;&lt;entry uri=&quot;sip:101@***SERVER***&quot;&gt;&lt;name&gt;Operator&lt;/name&gt;&lt;group&gt;Services&lt;/group&gt;&lt;/entry&gt;&lt;/list&gt;
 </string>
       </value>
     </entry>
@@ -564,7 +564,7 @@
       <value>
         <list type="string">
             <value>
-              <string>1|1|7c08ebb0-161e-e011-946f-0019d2acd12c|March-Hare Communications Collective|SIP|10.1.254.1|10.1.254.1|101|101|welcome|300</string>
+              <string>1|1|7c08ebb0-161e-e011-946f-0019d2acd12c|***COLLECTIVE***|SIP|***SERVER***|***SERVER***|***EXTENSION***|***EXTENSION***|welcome|300</string>
             </value>
         </list>
       </value>
@@ -675,7 +675,7 @@
       <key>protocols/sip/listen_port</key>
       <schema_key>/schemas/apps/ekiga/protocols/sip/listen_port</schema_key>
       <value>
-        <int>5061</int>
+        <int>***PORT***</int>
       </value>
     </entry>
     <entry>
