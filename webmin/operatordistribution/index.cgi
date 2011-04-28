@@ -143,7 +143,14 @@ sub process_action {
     # Copy over our default sip.conf and extensions.conf files
     # TODO: make a backup of any existing config files
     $mdir = &module_root_directory("operatordistribution");
-    File::Copy::copy($mdir.'/sip.conf',$config{'sip_conf'}); 
+    File::Copy::copy($mdir.'/sip.conf',$config{'sip_conf'}) or
+      die('Could not copy '. $config{'sip_conf'}); 
+    $prefix = $config{'private_address'};
+    $prefix =~ /((?:\d+\.){3})/;
+    $prefix = $1 .'0';
+    $append_localnet_cmd = 
+      'echo "localnet = '. $1 .'0/255.255.255.0" >> '. $config{'sip_conf'};
+    `$append_localnet_cmd`;
     File::Copy::copy($mdir.'/extensions.conf',$config{'extensions_conf'}); 
     File::Copy::copy($mdir.'/meetme.conf',$config{'meetme_conf'}); 
 
@@ -153,11 +160,8 @@ sub process_action {
     update_config('routable_address', $in{'KEY_ADDR'});
     update_config($in{'KEY_EMAIL'} .':'. $in{'KEY_OU'} .':extension', $extension);
 
-    # KEY_NAME is set via create_new_openvpn_server_key above
-    create_asterisk_sip_account($in{'KEY_NAME'});
-
     # TODO: configure ekiga on this box to use this account.
-    $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml.tmp';
+    my $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml.tmp';
     $config = generate_custom_ekiga_config(
       $config{'collective_name'},
       $config{'private_address'},
@@ -168,7 +172,8 @@ sub process_action {
     print F $config;
     close F;
     $command = "sudo -u ubuntu /usr/bin/gconftool-2 --load $config_file";
-    `$command`;
+    &error($text{'econfigure_ekiga'}) unless(
+      foreign_call('openvpn', "PrintCommandWEB", $command, $text{'configure_ekiga'}));
     unlink($config_file);
 
     # Configure ekiga to autostart
