@@ -197,7 +197,11 @@ CONFIG
     print F $ekiga_autostart_config;
     close F;
 
-    # TODO: set the system hostname to KEY_CN
+    # set the system hostname to KEY_CN
+    set_hostname($config{'ca_name'});
+
+    # prompt the user to restart the computer
+    `/usr/lib/indicator-session/gtk-logout-helper --restart &`;
   }
 
   process_new_account() if ($in{'action'} eq 'new_account');
