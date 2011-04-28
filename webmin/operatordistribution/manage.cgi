@@ -168,7 +168,7 @@ sub process_create_usb_stage2 {
   `$command`;
 
   # Read in the ekiga config template 
-  $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml.tmp';
+  my $config_file = &module_root_directory("operatordistribution") .'/ekiga.xml.tmp';
   $config = generate_custom_ekiga_config(
     $config{'collective_name'},
     $config{'private_address'},
