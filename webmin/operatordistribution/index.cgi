@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 require 'operatordistribution-lib.pl';
+&foreign_require("net", "net-lib.pl");
 ReadParse();
 
 # check to make sure a few pre-requisites are met:
@@ -198,7 +199,7 @@ CONFIG
     close F;
 
     # set the system hostname to KEY_CN
-    set_hostname($config{'ca_name'});
+    net::save_hostname($config{'ca_name'});
 
     # prompt the user to restart the computer
     `/usr/lib/indicator-session/gtk-logout-helper --restart &`;
