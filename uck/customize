@@ -107,7 +107,6 @@ function run_console()
 }
 
 SCRIPT_DIR=`dirname "$0"`
-. "$SCRIPT_DIR/gui.sh"
 
 LIVECD_LANGS=`cat "$SCRIPT_DIR/language_packs"`
 RUN_MANUAL_CUSTOMIZATIONS=`cat "$SCRIPT_DIR/run_manual_customizations"`
@@ -115,22 +114,26 @@ DESKTOP_TYPE=`cat "$SCRIPT_DIR/desktop_type"`
 
 DESKTOP_FLAVOURS=`cat "$SCRIPT_DIR/desktop_types"`
 
+# We need to install at least dialog here else the include of gui.sh will fail
 prepare_install || failure "Preparing installation failed, error=$?"
+PACKAGES_TO_INSTALL="openvpn ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules uck linux-headers-generic lsof dialog"
+install_packages $PACKAGES_TO_INSTALL || failure "Installing language packs failed, error=$?"
+
+. "$SCRIPT_DIR/gui.sh"
 
 echo "Installing language packs ($LIVECD_LANGS)..."
 
-PACKAGES_TO_INSTALL="openvpn ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules uck linux-headers-generic lsof"
 
 LANGPACKS_CONCATENATED=""
 
 if [ -n "$LIVECD_LANGS" ]; then
 	for LANGPACK in $LIVECD_LANGS; do
-		PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL language-pack-$LANGPACK language-support-$LANGPACK"
+		PACKAGES_TO_INSTALL="language-pack-$LANGPACK language-support-$LANGPACK"
 	
 		if [ "$DESKTOP_FLAVOURS" ]; then
 			for FLAVOUR in $DESKTOP_FLAVOURS; do
 				if [ $FLAVOUR == "gnome" ] || [ $FLAVOUR == "kde" ]; then
-					PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL language-pack-$FLAVOUR-$LANGPACK"
+					PACKAGES_TO_INSTALL="language-pack-$FLAVOUR-$LANGPACK"
 				fi
 			done
 		fi
