@@ -7,10 +7,9 @@ Usage
 apt-get install uck
 git clone https://github.com/March-hare/Operator-Distribution.git
 cd Operator-Distribution
-wget http://old-releases.ubuntu.com/releases/lucid/ubuntu-10.04.2-desktop-i386.iso
-MD5 (ubuntu-10.04.2-desktop-i386.iso) = 477350cbea8936c63d587cf2be69181b
-SHA1 (ubuntu-10.04.2-desktop-i386.iso) = 4089b4f4c73bf3aaaeee67713753d21f39ec72a4
-uck-remaster ubuntu-10.04.2-desktop-i386.iso `pwd`/uck `pwd`
+wget http://us.releases.ubuntu.com/oneiric/ubuntu-11.10-desktop-i386.iso
+echo 'c396dd0f97bd122691bdb92d7e68fde5 *ubuntu-11.10-desktop-i386.iso' | md5sum -c
+sudo uck-remaster ubuntu-11.10-desktop-i386.iso `pwd`/uck `pwd` | tee -a remaster.log
 
 The finished OD-server iso will be in remaster-new-files
 
