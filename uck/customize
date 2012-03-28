@@ -29,14 +29,16 @@ function prepare_install()
   #Does this work in the chroot or outside of it?
   sed -i "s/^# \+\(deb.*universe\)$/\1/" /etc/apt/sources.list
   rm -f /etc/apt/sources.list && touch /etc/apt/sources.list
-  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric main restricted" >> /etc/apt/sources.list
-  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-security main restricted" >> /etc/apt/sources.list
-  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates main restricted" >> /etc/apt/sources.list
-  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-backports main restricted universe multiverse" >> /etc/apt/sources.list
-  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric multiverse" >> /etc/apt/sources.list
-  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric universe" >> /etc/apt/sources.list
-  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates universe" >> /etc/apt/sources.list
   cat << REPOS > /etc/apt/sources.list
+deb http://failover.hackbloc.org:9090/ubuntu/ oneiric main restricted
+deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-security main restricted
+deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates main restricted
+deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-backports main restricted universe multiverse
+deb http://failover.hackbloc.org:9090/ubuntu/ oneiric multiverse
+deb http://failover.hackbloc.org:9090/ubuntu/ oneiric universe
+deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates universe
+REPOS
+  cat << REPOS > /dev/null
 deb http://us.archive.ubuntu.com/ubuntu/ oneiric main restricted
 deb http://us.archive.ubuntu.com/ubuntu/ oneiric-updates main restricted
 deb http://us.archive.ubuntu.com/ubuntu/ oneiric universe
@@ -253,10 +255,10 @@ CONFIG
 CONFIG
 
   # Set up our uck environment for the OD-clients
-  # Grab the 10.04 iso from the net and use the uck tools to unpack it
-  #wget -O /root/ubuntu-10.04.iso "http://us.releases.ubuntu.com/10.04.3/ubuntu-10.04.3-desktop-i386.iso"
+  # Grab the 11.10 iso from the net and use the uck tools to unpack it
+  #wget -O /root/ubuntu-11.10-desktop-i386.iso "http://us.releases.ubuntu.com/oneiric/ubuntu-11.10-desktop-i386.iso"
   #mkdir -p /usr/local/uck
-  #uck-remaster-unpack-iso /root/ubuntu-10.04.iso /usr/local/uck
+  #uck-remaster-unpack-iso /root/ubuntu-11.10-desktop-i386.iso /usr/local/uck
   #uck-remaster-unpack-rootfs /usr/local/uck
   #rm -rf /root/ubuntu-10.04.iso
 
