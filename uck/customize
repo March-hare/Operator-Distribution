@@ -28,8 +28,42 @@ function prepare_install()
 {
   #Does this work in the chroot or outside of it?
   sed -i "s/^# \+\(deb.*universe\)$/\1/" /etc/apt/sources.list
-	#try 2 times to avoid slow proxies failures
-	apt-get update || apt-get update || failure "apt-get update failed, error=$?"
+  rm -f /etc/apt/sources.list && touch /etc/apt/sources.list
+  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric main restricted" >> /etc/apt/sources.list
+  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-security main restricted" >> /etc/apt/sources.list
+  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates main restricted" >> /etc/apt/sources.list
+  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-backports main restricted universe multiverse" >> /etc/apt/sources.list
+  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric multiverse" >> /etc/apt/sources.list
+  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric universe" >> /etc/apt/sources.list
+  #echo "deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates universe" >> /etc/apt/sources.list
+  cat << REPOS > /etc/apt/sources.list
+deb http://us.archive.ubuntu.com/ubuntu/ oneiric main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ oneiric-updates main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ oneiric universe
+deb http://us.archive.ubuntu.com/ubuntu/ oneiric-updates universe
+deb http://us.archive.ubuntu.com/ubuntu/ oneiric multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ oneiric-updates multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ oneiric-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu oneiric-security main restricted
+deb http://security.ubuntu.com/ubuntu oneiric-security universe
+deb http://security.ubuntu.com/ubuntu oneiric-security multiverse
+deb http://archive.canonical.com/ubuntu oneiric partner
+deb http://extras.ubuntu.com/ubuntu oneiric main
+REPOS
+#try 2 times to avoid slow proxies failures
+  apt-get update || apt-get update || failure "apt-get update failed, error=$?"
+  dpkg --configure acpid
+  dpkg --configure -a
+  dpkg --configure cups
+  dpkg --configure -a
+  dpkg --configure bluez-cups
+  dpkg --configure -a
+  dpkg --configure hplip-cups
+  dpkg --configure -a
+  dpkg --configure hplip
+  dpkg --configure -a
+  apt-get update
+  apt-get install -f
   apt-get upgrade --assume-yes
 }
 
@@ -115,8 +149,10 @@ DESKTOP_TYPE=`cat "$SCRIPT_DIR/desktop_type"`
 DESKTOP_FLAVOURS=`cat "$SCRIPT_DIR/desktop_types"`
 
 # We need to install at least dialog here else the include of gui.sh will fail
-prepare_install || failure "Preparing installation failed, error=$?"
-PACKAGES_TO_INSTALL="openvpn ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules uck linux-headers-generic lsof dialog"
+echo "---- Preparing to install packages ----"
+prepare_install #|| failure "Preparing installation failed, error=$?"
+PACKAGES_TO_INSTALL="openssh-server openvpn ekiga libdata-password-perl libemail-valid-perl libnet-dbus-perl perl-modules uck linux-headers-generic lsof dialog"
+echo "---- Installing packages: $PACKAGES_TO_INSTALL ----"
 install_packages $PACKAGES_TO_INSTALL || failure "Installing language packs failed, error=$?"
 
 . "$SCRIPT_DIR/gui.sh"
@@ -218,11 +254,11 @@ CONFIG
 
   # Set up our uck environment for the OD-clients
   # Grab the 10.04 iso from the net and use the uck tools to unpack it
-  wget -O /root/ubuntu-10.04.iso "http://us.releases.ubuntu.com/10.04.3/ubuntu-10.04.3-desktop-i386.iso"
-  mkdir -p /usr/local/uck
-  uck-remaster-unpack-iso /root/ubuntu-10.04.iso /usr/local/uck
-  uck-remaster-unpack-rootfs /usr/local/uck
-  rm -rf /root/ubuntu-10.04.iso
+  #wget -O /root/ubuntu-10.04.iso "http://us.releases.ubuntu.com/10.04.3/ubuntu-10.04.3-desktop-i386.iso"
+  #mkdir -p /usr/local/uck
+  #uck-remaster-unpack-iso /root/ubuntu-10.04.iso /usr/local/uck
+  #uck-remaster-unpack-rootfs /usr/local/uck
+  #rm -rf /root/ubuntu-10.04.iso
 
 	#NOTE: we first install language pack, then remove others as installing language pack might pull packages
 	#which were not previously present
