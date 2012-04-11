@@ -256,11 +256,14 @@ CONFIG
 
   # Set up our uck environment for the OD-clients
   # Grab the 11.10 iso from the net and use the uck tools to unpack it
+  echo "Copy the Ubuntu ISO into the chroot. ~/tmp/remaster-root/root/"
+  echo "Press enter when you are done."
+  read
   #wget -O /root/ubuntu-11.10-desktop-i386.iso "http://us.releases.ubuntu.com/oneiric/ubuntu-11.10-desktop-i386.iso"
-  #mkdir -p /usr/local/uck
-  #uck-remaster-unpack-iso /root/ubuntu-11.10-desktop-i386.iso /usr/local/uck
-  #uck-remaster-unpack-rootfs /usr/local/uck
-  #rm -rf /root/ubuntu-10.04.iso
+  mkdir -p /usr/local/uck
+  uck-remaster-unpack-iso /root/ubuntu-11.10-desktop-i386.iso /usr/local/uck
+  uck-remaster-unpack-rootfs /usr/local/uck
+  rm -rf /root/ubuntu-11.10-desktop-i386.iso
 
 	#NOTE: we first install language pack, then remove others as installing language pack might pull packages
 	#which were not previously present
