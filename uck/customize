@@ -29,7 +29,7 @@ function prepare_install()
   #Does this work in the chroot or outside of it?
   sed -i "s/^# \+\(deb.*universe\)$/\1/" /etc/apt/sources.list
   rm -f /etc/apt/sources.list && touch /etc/apt/sources.list
-  cat << REPOS > /etc/apt/sources.list
+  cat << REPOS > /dev/null
 deb http://failover.hackbloc.org:9090/ubuntu/ oneiric main restricted
 deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-security main restricted
 deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates main restricted
@@ -38,7 +38,7 @@ deb http://failover.hackbloc.org:9090/ubuntu/ oneiric multiverse
 deb http://failover.hackbloc.org:9090/ubuntu/ oneiric universe
 deb http://failover.hackbloc.org:9090/ubuntu/ oneiric-updates universe
 REPOS
-  cat << REPOS > /dev/null
+  cat << REPOS > /etc/apt/sources.list
 deb http://us.archive.ubuntu.com/ubuntu/ oneiric main restricted
 deb http://us.archive.ubuntu.com/ubuntu/ oneiric-updates main restricted
 deb http://us.archive.ubuntu.com/ubuntu/ oneiric universe
